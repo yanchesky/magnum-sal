@@ -1,0 +1,930 @@
+body{
+  background-color: black;
+}
+
+polygon {
+	cursor:pointer;
+}
+
+.centered{
+  position:relative;
+  left:50%;
+  transform: translate(-50%)
+}
+
+#zawartosc-gry{
+  position: absolute;
+  width: 100%;
+  height: 642px;
+  background-image: url('img/board_small_3.jpg');
+  background-repeat: no-repeat;
+  background-color: black;
+}
+
+.dodaj-robotnika, .zabierz-robotnika, .pomocnik, .gornik, #przycisk-konca-tury, .kostka-soli, .kostka-soli-targ, input[type="checkbox"] + label, .monetka-gracza, #koszt-wydobycia-wody{
+  background-image: url("sprites/komponenty.png");
+}
+
+.szyb, .komnata .flipper > div{
+  background-image: url("sprites/komnaty.png");
+}
+
+#potw, #moveRight, #moveLeft, .przycisk-wydobycia-soli, .przycisk-wydobycia-wody, .monetka-zamowienie{
+  background-image: url("sprites/przyciski_duze.png")
+}
+
+.karta-zamowienie .flipper > div{
+	background-image: url('sprites/zamowienia.png');
+}
+
+.karta-narzedzie .flipper > div{
+  background-image: url('sprites/narzedzia.jpg');
+}
+
+
+
+/* - - - - - - - - - - - - */
+
+.kostka-soli{
+  position:relative;
+  float:left;
+  width:23px;
+  height:25px;
+}
+
+.rd0{
+  background-position-x:-400px;
+}
+
+.rd1{
+  background-position-x:-423px;
+}
+
+.rd2{
+  background-position-x:-446px;
+}
+
+.rd3{
+  background-position-x:-469px;
+}
+
+/* - - - - - - - - - - - */
+
+.pionek1{
+  background-position:-32px;
+}
+
+.pionek2{
+  background-position: -65px;
+}
+
+.pionek3{
+  background-position: -98px;
+}
+
+.pionek4{
+  background-position: -131px;
+}
+
+/* - - - - - - - - - - - - */
+
+#pierwsza-czesc, #druga-czesc, #trzecia-czesc{
+	float:left;
+	width:100%;
+	height:200px;
+}
+
+/* - - - - - - - - - - - - - - - - */
+
+#powierzchnia-planszy {
+	float:left;
+  margin-top:35px;
+	margin-left:20px;
+	width:836px;
+	overflow:hidden;
+}
+
+#sklep-z-narzedziami {
+  float: left;
+	position: absolute;
+	left:780px;
+  width: 430px;
+  height: 187px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - */
+
+.pomocnik {
+  background-position-x:-5px;
+	background-repeat: no-repeat;
+	cursor:pointer;
+}
+
+#pomocnik0{
+	position:absolute;
+	left:300px;
+	top:190px;
+}
+
+#pomocnik1 {
+	position:absolute;
+	left:700px;
+	top:200px;
+}
+
+#pomocnik2{
+	position:absolute;
+	left:270px;
+	top:500px;
+}
+
+#pomocnik3{
+	margin-right:20px;
+	position:absolute;
+	left:790px;
+	top:550px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#targ {
+  position:absolute;
+	left:625px;
+  margin-top:-10px;
+	width:200px;
+	height:170px;
+}
+
+#targ svg {
+  position:relative;
+  top:5px;
+  left:5px;
+	margin-right:13px;
+	margin-top:-3px;
+	cursor:pointer;
+}
+
+.stanowisko-targ {
+  float:left;
+  width:40px;
+  height:40px;
+	margin-left:16px;
+	margin-top:3px;
+	cursor:pointer;
+}
+
+.stanowisko-targ:last-child {
+	margin-right:40px;
+}
+
+.kostka-soli-targ {
+  position:relative;
+	background-repeat: no-repeat;
+}
+
+.wykupione{
+  background-image: none;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+.zmeczony{
+  position:relative;
+  transform: rotate(90deg);
+}
+
+.wymagany-gornik{
+	transform:translateY(-5px)
+}
+
+.przycisk-wydobycia-soli, .przycisk-wydobycia-wody{
+  position:relative;
+  float:left;
+  margin-left:15px;
+  margin-right:15px;
+  width: 41px;
+  height: 40px;
+  background-position-x:-187px;
+}
+
+.przycisk-wydobycia-wody{
+  background-position-x: -227px;
+}
+
+.dodaj-robotnika, .zabierz-robotnika{
+  position:relative;
+  width:34px;
+  height:35px;
+  float:left;
+  background-position-x:-162px;
+}
+
+.zabierz-robotnika{
+  background-position-x:-196px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#cialo-gorny-pasek > div{
+  position:relative;
+  float:left;
+  margin-right: 20px;
+}
+
+#cialo-gorny-pasek{
+  position:relative;
+  left:60px;
+}
+
+svg text{
+  font-size: 14px;
+}
+
+.highlighted circle{
+  fill: #f0eabb;
+}
+
+.highlighted text{
+  fill: black;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#zamowienia-krolewskie > div{
+  left:345px;
+  top:130px;
+}
+
+.karta-narzedzie, .karta-zamowienie{
+  position:absolute;
+	perspective: 600px;
+}
+
+.puffing{
+  position:absolute;
+}
+
+.komnata{
+  position:relative;
+  float:left;
+  perspective: 600px;
+  width: 95px;
+  height: 95px;
+}
+
+.lewy > div{
+	float:right;
+}
+
+.rewers-karty {
+	position: absolute;
+  backface-visibility: hidden;
+  z-index:1;
+	top: 0;
+	left: 0;
+	transform: rotateY(180deg);
+}
+
+.awers-karty {
+  transform: rotateY(0deg);
+}
+
+.flipper{
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+  position: relative;
+}
+
+.karta-zamowienie .flipper .awers-karty{
+  background-position-x:-90px;
+}
+
+.karta-zamowienie .flipper > div{
+  height:90px;
+  width:90px;
+}
+
+.narzedzie, .karta-narzedzie .flipper > div{
+  width:90px;
+  height:140px;
+}
+
+.komnata .flipper > div, .szyb{
+  width:95px;
+  height:95px;
+}
+
+.karta-narzedzie .flipper .rewers{
+  background-position: -722px;
+}
+
+.level2 .flipper .rewers-karty{
+  background-position: -95px;
+}
+.level3 .flipper .rewers-karty{
+  background-position: -190px;
+}
+
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+.matsy-kopalnia, .gornicy-kopalnia, .woda-kopalnia, .matsy-zamowienie {
+  position:relative;
+	display:flex;
+  flex-direction: row;
+  width:92px;
+  height:30px;
+  margin-bottom:2px;
+  justify-content: center;
+  align-items: center;
+}
+
+.matsy-kopalnia .kostka-soli:nth-child(5){
+  margin-top: 12px;
+  margin-left: -35px;
+}
+
+.gornicy-kopalnia{
+  flex-direction: row-reverse;
+}
+
+.szyb{
+  display: flex;
+  position: relative;
+	background-repeat: no-repeat;
+  justify-content: center;
+  align-items: center;
+	cursor:pointer;
+}
+
+.gornik {
+  position:relative;
+  margin-left:-13px;
+  margin-right:-13px;
+	width:35px;
+	height:35px;
+	background-repeat: no-repeat;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+.kostka-checkbox{
+	position: relative;
+	float:left;
+	height: 34px;
+  width: 34px;
+  margin-top:5px;
+  margin-left:-2px;
+}
+
+input[type="checkbox"] {
+    opacity: 0;
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    z-index: 2;
+}
+
+input[type="checkbox"] + label{
+  position: absolute;
+  float:left;
+	background-repeat: no-repeat;
+	height: 35px;
+	width: 35px;
+	z-index: 1;
+}
+
+input[type="checkbox"]:checked + label{
+  border-radius: 24px;
+  filter: drop-shadow(0px 0px 2px white);
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+@-webkit-keyframes animatetop {
+    from {opacity:0}
+    to {opacity:1}
+}
+
+@keyframes animatetop {
+    from {opacity:0}
+    to {opacity:1}
+}
+
+
+.modal {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.cialo-modal {
+    position: relative;
+    background-repeat: no-repeat;
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.9s;
+    animation-name: animatetop;
+    animation-duration: 0.9s
+}
+
+#cialo-modal-kopalnia{
+  position:absolute;
+  width: 300px;
+  height: 281px;
+  background-image: url('img/popup_normal.png');
+}
+
+#wnetrze-modal-kopalnia{
+  position:relative;
+  display:block;
+  margin:30px;
+}
+
+#wnetrze-modal-kopalnia > div{
+  position:relative;
+  float:left;
+  margin-bottom:10px;
+}
+
+#gornicy-wszystkich{
+  float:left;
+  width:120px;
+}
+
+#gornicy-gracza-modal{
+  margin-left:20px;
+  float:left;
+}
+
+#wydobycie-wody-modal > div{
+  float:left
+}
+
+#gornicy-wszystkich div{
+  position:relative;
+}
+
+#gornicy-wszystkich .gornik{
+  position:relative;
+  float:right;
+}
+
+.narzedzie-modal{
+  transform:scale(0.5);
+  margin-right: -21px;
+  margin-left:-21px;
+  margin-top: -25px;
+}
+
+.aktywne-modal{
+	transform:scale(0.5) translateY(-15px);
+}
+
+#cialo-modal-zamowienia{
+  top:100px;
+  left:50%;
+  width: 465px;
+  height: 177px;
+  background-image: url('img/popup_zamowienia_2.png');
+}
+
+#wnetrze-modal-zamowienia{
+  position:absolute;
+  margin-top:55px;
+  margin-left: 35px;
+}
+
+#cialo-modal-zamowienia .karta-zamowienie{
+  position:relative;
+  float:right;
+  margin-left: 7px;
+}
+
+#cialo-modal-zamowienia .karta-zamowienie:hover{
+	box-shadow: 0 0 10px white;
+  cursor: pointer;
+}
+
+#cialo-modal-zamowienia .karta-zamowienie .flipper{
+	transform: rotateY(0deg);
+}
+
+#narzedzia-modal{
+  width:240px;
+  height:70px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+.narzedzie{
+  position: relative;
+  float:left;
+  background-image: url('sprites/narzedzia.jpg');
+}
+
+.kilof{
+  background-position:-182px;
+}
+
+.lina{
+  background-position:-632px;
+}
+
+.czerpak{
+  background-position:-452px;
+}
+
+.prowiant{
+  background-position:-272px;
+}
+
+.wozek{
+  background-position:-92px;
+}
+
+.glejthandlowy{
+  background-position:-362px;
+}
+
+.glejtkrolewski{
+  background-position:-542px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#droga-do-zamku{
+	position:absolute;
+	left:87px;
+	top:140px;
+	width:200px;
+	height:90px;
+}
+
+#koszt-wydobycia-wody{
+  position:relative;
+  left:20px;
+  width:33px;
+  height:33px;
+  background-position-x:-840px;
+}
+
+.kolejka-do-zamku {
+  position:relative;
+  float:left;
+  top:10px;
+	width:60px;
+	height:30px;
+	margin:15px;
+  margin-left:20px;
+  cursor:pointer;
+  display: flex;
+  flex-direction:row-reverse;
+  justify-content: center;
+}
+
+.monetka-zamowienie {
+  position:relative;
+  top:5px;
+  width:40px;
+  height:40px;
+  align-content: center;
+  background-position-x: -270px;
+}
+
+.monetka-zamowienie > div{
+  line-height: 40px;
+  text-align: center;
+  text-shadow: 0 0 3px #000;
+  color: #f0eabb;
+  font-size: 18px;
+}
+
+.matsy-zamowienie{
+  top:5px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#karczma {
+  position:relative;
+	float:left;
+  left:190px;
+	width:235px;
+	height:200px;
+}
+
+#plac-zebralniczy {
+  position:absolute;
+  left:540px;
+	width:200px;
+	height:150px;
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#kopalnia{
+  position: absolute;
+	display: block;
+	top: 642px;
+  width: 900px;
+  height: 570px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+#szyb-holder {
+	grid-column: 2;
+	grid-row: 1/4;
+}
+
+#kopalnia-grid {
+  display: grid;
+  grid-template-columns: auto 95px auto ;
+  background-color: black;
+  height: 570px;
+}
+
+.komnata-holder{
+	margin-top:95px ;
+	width:auto;
+  background-color: black;
+}
+
+#gorny-pasek-info{
+  position:absolute;
+  top:0px;
+  width:900px;
+  height: 25px;
+  background-color: rgba(0,0,0,0.4);
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#tlo-info-gracza{
+  position:fixed;
+  top:15px;
+  right:10px;
+  height:339px;
+  width:278px;
+  background-color: rgba(0,0,0,0.7);
+}
+
+#ramka-info-gracza{
+	position:absolute;
+	top:-15px;
+	right:-10px;
+  width: 303px;
+  height: 370px;
+  background-image: url('img/ramka_playerinfo_3.png')
+}
+
+#cialo-info-gracza{
+  display:block;
+  margin:25px;
+}
+
+#imie-gracza{
+  position: relative;
+  color: white;
+  text-align: center;
+  top:-15px;
+}
+
+#narzedzia-gracza > div{
+  position: relative;
+  float: left;
+  margin-left: -16px;
+  height: 100px;
+  width: 600px;
+}
+
+#narzedzia-gracza{
+  margin-left:8px;
+  overflow:hidden;
+}
+
+.narzedzie-inwentarz{
+  transform: scale(0.65);
+  margin-right: -30px;
+  margin-top: -20px;
+}
+
+.aktywne-inwentarz{
+  transform:scale(0.65) translateY(-15px);
+}
+
+.uzyte-narzedzie{
+	filter: grayscale(100%);
+	cursor: default;
+}
+
+#materialy-gracza {
+  margin: 12px;
+	height:42px;
+}
+
+#pieniadze-gracza {
+  margin:12px;
+	height:30px;
+}
+
+.monetka-gracza{
+  float:left;
+  position:relative;
+  margin-right: -5px;
+  width:30px;
+  height:30px;
+}
+
+.m50{
+  background-position-x:-715px;
+}
+
+.m20{
+  background-position-x:-746px;
+}
+
+.m5{
+  background-position-x:-777px;
+}
+
+.m1{
+  background-position-x:-810px;
+}
+
+#przycisk-konca-tury{
+  position:relative;
+  width:164px;
+  height:27px;
+  background-position-x:-236px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#gornicy-gracza {
+  color: white;
+  font-size: 28px;
+  height:30px;
+}
+
+#gornicy-gracza > div  {
+	clear:both;
+  float:left;
+  margin-left: 10px;
+}
+
+#gornicy-gracza > div > div {
+	float: right;
+  margin-left:-7px;
+
+}
+
+/* - - - - - - - - - - - - - - - - - - - - - */
+
+#tlo-dziennik-gry{
+  position:fixed;
+  width:269px;
+  height:269px;
+  background-color: rgba(0,0,0,0.7);
+  bottom:15px;
+  right:15px;
+}
+
+#ramka-dziennik-gry{
+  position:absolute;
+  top:-3px;
+  left:-3px;
+  width:276px;
+  height:274px;
+  background-image: url('img/ramka_log.png');
+}
+
+#okno-dziennik-gry{
+  margin:10px;
+  overflow-y: scroll;
+}
+
+.wpis {
+	position:relative;
+  display:block;
+	margin:5px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f0eabb;
+  font-size: 13px;
+}
+
+.wpis > div{
+  position: relative;
+  float: left;
+  margin-right: 5px;
+}
+
+.czas {
+	width:20%;
+}
+
+.cialo{
+	width:70%;
+}
+
+#moveLeft, #moveRight{
+  float:left;
+  width:45px;
+  height:45px;
+}
+
+#moveRight{
+  background-position-x: -45px;
+
+}
+
+#potw{
+  width:90px;
+  height:48px;
+  background-position-x: -94px;
+}
+
+.ukryty{
+  visibility:hidden;
+}
+
+.przyciski-narzedzi{
+  display:none;
+}
+
+/* - - - - - - - - - - - - - - - - - - */
+
+.l0k0{
+  background-position-x:-285px;
+}
+
+.l0k1{
+  background-position-x:-380px;
+}
+
+.l0k2{
+  background-position-x:-475px;
+}
+
+.l0k3{
+  background-position-x:-570px;
+}
+
+.l0k4{
+  background-position-x:-665px;
+}
+
+.l0k5{
+  background-position-x:-760px;
+}
+
+.l0k6{
+  background-position-x:-855px;
+}
+
+.l0k7{
+  background-position-x:-950px;
+}
+
+.l1k0{
+  background-position-x:-1045px;
+}
+
+.l1k1{
+  background-position-x:-1140px;
+}
+
+.l1k2{
+  background-position-x:-1235px;
+}
+
+.l1k3{
+  background-position-x:-1330px;
+}
+
+.l1k4{
+  background-position-x:-1425px;
+}
+
+.l1k5{
+  background-position-x:-1520px;
+}
+
+.l2k0{
+  background-position-x:-1615px;
+}
+
+.l2k1{
+  background-position-x:-1710px;
+}
+
+.l2k2{
+  background-position-x:-1805px;
+}
+
+.l2k3{
+  background-position-x:-1900px;
+}

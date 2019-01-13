@@ -1,0 +1,22 @@
+{% block nowaKarta %}
+
+  <div class="flipper">
+    <div class="rewers-karty"></div>
+    <div class="awers-karty">
+      <div class="matsy-zamowienie">
+      {% for kostka in zamowienie.kostkiSoli.kostki %}
+        {% set a = loop.index0 %}
+
+          {% for i in range(kostka) %}
+            <div class="kostka-soli rd{{a}}"></div>
+          {% endfor %}
+
+      {% endfor %}
+      </div>
+      <div class="monetka-zamowienie centered">
+        <div class="centered">{{zamowienie.nagroda}}</div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

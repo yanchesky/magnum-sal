@@ -1,0 +1,18 @@
+	{% block castle %}
+
+	<div class='kolejka-do-zamku'>
+	{% for gracz in kolejki[1] %}
+
+		<div class='gornik pionek{{gracz.lpGracza}}'></div>
+
+	{% endfor %}
+	</div>
+	<div class='kolejka-do-zamku'>
+	{% for gracz in kolejki[0] %}
+
+		<div class='gornik pionek{{gracz.lpGracza}}'></div>
+
+	{% endfor %}
+	</div>
+
+	{% endblock %}

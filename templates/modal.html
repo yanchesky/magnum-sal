@@ -1,0 +1,79 @@
+{% block modal %}
+	<div id="matsy-modal">
+		<div class='przycisk-wydobycia-soli przycisk'></div>
+		{% for mat in kopalnia.kostki.kostki %}
+			{% set a = loop.index0 %}
+			{% if mat != 0 %}
+				{% for i in range(mat) %}
+				<div class="kostka-checkbox">
+					<input class="solBox" type="checkbox"  value="{{a}}">
+					<label style="background-position:{{a*-38-525}}px"></label>
+				</div>
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
+	</div>
+
+	<div class='gornicy-modal'>
+		<div class="dodaj-robotnika przycisk"></div>
+		<div class="zabierz-robotnika przycisk"></div>
+
+		<div id="gornicy-wszystkich">
+			<div id="gornicy-gracza-modal">
+			{% for zip in kopalnia.zmeczeni %}
+				<div class='gornik pionek{{zip.lpGracza}} zmeczony' title='Zmęczeni'></div>
+			{% endfor %}
+			{% for zip in gornicy %}
+				<div class='gornik pionek{{zip.lpGracza}}'></div>
+			{% endfor %}
+			</div>
+
+			<div id="gornicy-reszty-modal">
+				{% for zip in reszta %}
+					<div class='gornik pionek{{zip.lpGracza}}'></div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div id='wydobycie-wody-modal'>
+		<div class='przycisk-wydobycia-wody przycisk'></div>
+			{% for wd in range(kopalnia.woda) %}
+		<div class="kostka-checkbox">
+			<input class="wodaBox" type="checkbox" value="3">
+			<label style="background-position:-638px"></label>
+		</div>
+			{% endfor %}
+		<div id="koszt-wydobycia-wody"></div>
+	</div>
+
+	<div id="narzedzia-modal" >
+		{% for x in narzedzia %}
+			{% if x.used == False %}
+			<div class="narzedzie narzedzie-modal {{x.id}}"  title="{{x.tytul}}" value="{{x.id}}">
+				{% if x.id == "prowiant" %}
+				<div class="przyciski-narzedzi">
+					<div id="potw"></div>
+				</div>
+				{% elif x.id == "czerpak"%}
+					<div class="przyciski-narzedzi">
+					{% if czerpakowaLista[0] == 1 %}
+						<div id="moveLeft"></div>
+					{% else %}
+						<div id="moveLeft" class="ukryty"></div>
+					{% endif %}
+
+					{% if czerpakowaLista[1] == 1 %}
+						<div id="moveRight"></div>
+					{% else %}
+						<div id="moveRight" class="ukryty"></div>
+					{% endif %}
+					</div>
+				{% endif %}
+			</div>
+			{% else%}
+			<div class="narzedzie narzedzie-modal {{x.id}} usedTool" title="{{x.title}}" id="{{x.id}}"></div>
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endblock %}

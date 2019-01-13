@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Magnum Sal v 0.1</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<script type="text/javascript" src="{{ url_for('static', filename='libs/jquery-3.3.1.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='libs/anime.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/glowny.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/obiekty.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/animacje.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/wydarzenia.js') }}"></script>
+
+</head>
+	<body>
+
+		<div id="zawartosc-gry">
+			<div id="zamowienia-modal" class="modal">
+				<div id="cialo-modal-zamowienia" class="cialo-modal centered">
+					<div id="wnetrze-modal-zamowienia">
+						{% block zamowieniaModal %}{% endblock %}
+					</div>
+				</div>
+			</div>
+
+		<div id="gorny-pasek-info">
+				<div id="cialo-gorny-pasek">
+					{% block kosztModal %}{% endblock %}
+					<div>Zrealizowane zamówienia:</div>
+					<div class="kontener-svg" id="zrealizowane-zamowienia">
+						{% block zrealizowaneZamowienia%}{% endblock %}
+					</div>
+
+					<div>Aktualny koszt górnika:</div>
+
+					<div class="kontener-svg" id="wykupieni-gornicy">
+						{% block kosztGornikow %}{% endblock%}
+					</div>
+				</div>
+		</div>
+
+		<div id="powierzchnia-planszy">
+			<div id="pierwsza-czesc">
+				<div id="zamowienia-krolewskie">
+					{% block ordery %}{% endblock %}
+				</div>
+				<div id="droga-do-zamku">
+					{% block castle %}{% endblock %}
+				</div>
+				<div id="sklep-z-narzedziami">
+					{% block narzedzia %}{% endblock %}
+				</div>
+			</div>
+			<div id="druga-czesc">
+				<div id="karczma" title="Karczma">
+					{% block ziphouse %}{% endblock %}
+					<svg width="235" height="200" >
+					  <polygon points="5,130 68,9 171,26 218,148 135,170" fill=transparent />
+					</svg>
+				</div>
+				<div id="plac-zebralniczy" title="Plac">
+					{% block beggary %}{% endblock %}
+					<svg width="180" height="100" >
+					  <polygon points="0,50 44,20 88,41 158,43 197,72 197,93 137,116 0,119" fill="transparent" />
+					</svg>
+				</div>
+			</div>
+			<div id="trzecia-czesc">
+				<div id="targ">
+					{% block targowisko %}{% endblock %}
+				</div>
+			</div>
+		</div>
+		{% block helper %}{% endblock %}
+
+		<div id="kopalnia">
+			<div id="kopalnia-modal" class="modal">
+				<div id="cialo-modal-kopalnia" class="cialo-modal"></div>
+			</div>
+			{% block kopalnia %}{% endblock %}
+		</div>
+
+		<div id="tlo-info-gracza">
+			<div id="ramka-info-gracza">
+				<div id="cialo-info-gracza">
+					{% block playerInfoMain %}{% endblock %}
+				</div>
+				<div id="przycisk-konca-tury" class="centered"></div>
+			</div>
+		</div>
+		<div id="tlo-dziennik-gry" style="display:none">
+			<div id="ramka-dziennik-gry">
+				<div id="okno-dziennik-gry">
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
