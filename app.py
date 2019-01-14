@@ -60,7 +60,7 @@ def budynekKarczmy():
     if ag.dostepnaAkcja(karczma):
         if len(kg) > 0:
             if ag.kasa >= kg[0]:
-                log = " <u>{0}</u> kupił zipa za {1} groszy.".format(ag.imie, kg[0])
+                log = "<u>{0}</u> kupił górnika za {1} groszy.".format(ag.imie, kg[0])
                 ag.kasa -= kg.pop(0)
                 ag.gornicy += 1
                 karczma.aktualnaPozycja += 1
@@ -75,7 +75,7 @@ def budynekKarczmy():
                 log = "Nie stać cię na górnika"
                 return jsonify(log=x, alrt=1)
         else:
-            log = " Nie ma już dostępnych górników do zwerbowania w tym tygodniu"
+            log = "Nie ma już dostępnych górników do zwerbowania w tym tygodniu"
             return jsonify(log=log, alrt=1, zipek=karczma.aktualnaPozycja)
     else:
         if karczma in ag.uzyteBudynki:
@@ -106,7 +106,7 @@ def kolejkaDoZamku():
         ag.wykonajAkcje(zamek)
         ag.gornicy -= 1
 
-        log = " <u>{0}</u> wstawił się do kolejki".format(ag.imie)
+        log = "<u>{0}</u> wstawił się do kolejki".format(ag.imie)
 
         return jsonify(
             oknoGracza=ag.info(),
@@ -133,7 +133,7 @@ def placZebralniczy():
         ag.kasa += 1
         ag.wykonajAkcje(plac)
 
-        log = " <u>{0}</u> wyżebrał 1 grosz".format(ag.imie)
+        log = "<u>{0}</u> wyżebrał 1 grosz".format(ag.imie)
         return jsonify(oknoGracza=ag.info(), log=log)
     else:
         alrt=0
@@ -149,7 +149,7 @@ def placZebralniczy():
 def endturn():
 
     ag = gra.aktualnyGracz
-    log = " <u>{0}</u> zakończył turę".format(ag.imie)
+    log = "<u>{0}</u> zakończył turę".format(ag.imie)
 
     realizujeZamowienie = False
 
@@ -213,20 +213,22 @@ def ustawPomocnika():
             bzp.pomocnik = ag
             ag.wykonajAkcje()
 
-            log = " <u>{0}</u> wstawił pomocnika do {1}".format(ag.imie, bzp.nazwa)
+            log = " <u>{0}</u> wstawił pomocnika do {1}".format(
+                                                        ag.imie, bzp.nazwa)
 
             return jsonify(
                 oknoGracza=ag.info(),
                 log=log,
                 wstawiam=True,
-                gracz=ag.lpGracza*-33
+                gracz=ag.lpGracza * -33
             )
 
         elif bzp.pomocnik is ag:
             ag.gornicy += 1
             bzp.pomocnik = None
 
-            log = " <u>{0}</u> zabrał pomocnika z {1}".format(ag.imie, bzp.nazwa)
+            log = " <u>{0}</u> zabrał pomocnika z {1}".format(
+                                                    ag.imie, bzp.nazwa)
 
             return jsonify(
                 oknoGracza=ag.info(),
@@ -269,24 +271,22 @@ def targowisko():
         # Jeśli na klikniętym polu jest kostka, to kupuje
         if target.jestKostka:
             if ag.kasa >= target.cena:
-                # targetSlot.kup() # Do poprawnego działania funkcja musi byc przed wszystkimi,
-                # bo szuka najwyzszej ceny sprzedazy i najnizszej kupna
                 target.jestKostka = False
                 ag.kasa -= target.cena - bonus
                 ag.kostkiSoli += target.kostka
                 targ.akcje += 1
-                log = " <u>{0}</u> kupił kostkę za {1} grosze".format(ag.imie, target.cena-bonus)
+                log = " <u>{0}</u> kupił kostkę za {1} grosze".format(
+                    ag.imie, target.cena-bonus)
 
         else:
             if ag.kostkiSoli >= target.kostka:
-                # Do poprawnego działania funkcja musi byc przed wszystkimi,
-                # bo szuka najwyzszej ceny sprzedazy i najnizszej kupna
                 target.jestKostka = True
                 ag.kasa += target.cena + bonus
                 ag.kostkiSoli -= target.kostka
                 targ.akcje += 1
 
-                log = " <u>{0}</u> sprzedał kostkę za {1} grosze".format(ag.imie, target.cena+bonus)
+                log = " <u>{0}</u> sprzedał kostkę za {1} grosze".format(
+                    ag.imie, target.cena+bonus)
 
         # Zapobiega podwójnej gratyfikacji pomocnika
         if targ.pomocnik and targ.akcje == 1:
@@ -317,7 +317,7 @@ def narzedzia():
     ag = gra.aktualnyGracz
     indeks = request.args.get('a', 0, type=int)
 
-    # Aby nie można było pobrać karty z poza widocznych
+    # Aby nie można było pobrać karty spoza widocznych
     if indeks > 2 or indeks < 0:
         indeks = 0
 
@@ -333,7 +333,8 @@ def narzedzia():
                 ag.imie, ag.narzedzia[-1].tytul, kosztKarty)
 
             if warsztat.pomocnik:
-                log += " {0} dostał za to 1 grosz".format(warsztat.pomocnik.imie)
+                log += " {0} dostał za to 1 grosz".format(
+                    warsztat.pomocnik.imie)
                 warsztat.pomocnik.kasa += 1
 
             # Uniemożliwia pobieranie narzędzi jeśli nie ma ich już w puli
@@ -386,7 +387,8 @@ def zamowienia():
                 ag.imie, wybraneZamowienie.nagroda)
 
             if zamek.pomocnik:
-                log += " <u>{0}</u> dostał 1 grosz za pomocnika".format(zamek.pomocnik.imie)
+                log += " <u>{0}</u> dostał 1 grosz za pomocnika".format(
+                    zamek.pomocnik.imie)
                 zamek.pomocnik.kasa += 1
 
             if len(zamek.zamowieniaKrolewskie) > 3:
@@ -425,13 +427,16 @@ def shaft():
     # zabierany.
 
     if ag not in kopalnia.target.gracze:
-        if ag.gornicy > 0 and kopalnia.sprawdzWstawienie() and ag.dostepnaAkcja():
+        if (ag.gornicy > 0
+        and kopalnia.sprawdzWstawienie()
+        and ag.dostepnaAkcja()):
             zabiera = False
             ag.gornicy -= 1
             kopalnia.wstawGracza(ag)
             ag.wykonajAkcje()
 
-            log = " <u>{0}</u> wstawił się do szybu nr: {1}".format(ag.imie, str(indeks+1))
+            log = " <u>{0}</u> wstawił się do szybu nr: {1}".format(
+                ag.imie, str(indeks+1))
         else:
             log = ""
             if not ag.gornicy > 0:
@@ -475,15 +480,21 @@ def rend_mod():
     ag = gra.aktualnyGracz
     indeks = request.args.get('a', 0, type=int)
 
-    # Rozpakowuje zagniezdzone w sobie listy
+    # Rozpakowuje zagnieżdżone w sobie listy
     splaszczoneKomnaty = kopalnia.splaszczKomnaty()
     kopalnia.zaznaczKomnate(splaszczoneKomnaty[indeks])
 
     modal = render_template('modal.html',
-                            gornicy=[x for x in kopalnia.target.gracze if x is ag],
-                            reszta=[x for x in kopalnia.target.gracze if x is not ag],
-                            narzedzia=[x for x in ag.narzedzia if x.id !=
-                                       "glejthandlowy" and x.id != "glejtkrolewski" and x.used is False],
+                            gornicy=[x for x in kopalnia.target.gracze
+                                if x is ag],
+                            zmeczeniGracza=[x for x in kopalnia.target.zmeczeni
+                                if x is ag],
+                            reszta=[x for x in kopalnia.target.gracze
+                                if x is not ag],
+                            narzedzia=[x for x in ag.narzedzia if
+                                x.id != "glejthandlowy"
+                                and x.id != "glejtkrolewski"
+                                and x.used is False],
                             kopalnia=kopalnia.target,
                             czerpakowaLista=kopalnia.przyciskiCzerpaka()
                             )
@@ -512,7 +523,8 @@ def room():
                 kopalnia.target.odkryte = True
                 odkrywamy = True
 
-            log = " <b>{0}</b> wstawił robotnika do komnaty nr: {1}".format(ag.imie, str(indeks+1))
+            log = " <b>{0}</b> wstawił robotnika do komnaty nr: {1}".format(
+                ag.imie, str(indeks+1))
 
             return jsonify(
                 oknoGracza=ag.info(),
@@ -558,7 +570,9 @@ def modal():
 
             # Konwersja kostek do obiektu klasy KostkiSoli
             kostkiSoli = [int(x) for x in json.loads(request.args.get('b', 0, type=str))]
-            kostkiObiekt = KostkiSoli(kostkiSoli.count(0), kostkiSoli.count(1), kostkiSoli.count(2))
+            kostkiObiekt = KostkiSoli(kostkiSoli.count(0),
+                                    kostkiSoli.count(1),
+                                    kostkiSoli.count(2))
             liczbaKostekSoli = len(kostkiSoli)
 
             kilofy = 0
@@ -586,7 +600,8 @@ def modal():
                 if aktywniGornicy+kilofy >= liczbaKostekSoli + iloscWody:
                     listaWozka = []
                     plaskaLista = kopalnia.splaszczKopalnie()
-                    kosztTransportu = kopalnia.kosztTransportu(plaskaLista, liczbaKostekSoli, ag)
+                    kosztTransportu = kopalnia.kosztTransportu(
+                        plaskaLista, liczbaKostekSoli, ag)
 
                     if wozek > 0:
                         listaWozka = kopalnia.wybierzKomnaty(
@@ -601,7 +616,8 @@ def modal():
                         kosztTransportu -= roznica*len(listaWozka)
 
                     if ag.kasa >= kosztTransportu:
-                        kopalnia.rozliczTransport(plaskaLista, listaWozka, liczbaKostekSoli, ag)
+                        kopalnia.rozliczTransport(
+                            plaskaLista, listaWozka, liczbaKostekSoli, ag)
                         ag.kostkiSoli += kostkiObiekt
                         kopalnia.target.kostki -= kostkiObiekt
                         kopalnia.target.zmeczeni.append(ag)
@@ -615,8 +631,12 @@ def modal():
                             kopalnia.target.zmeczeni.append(ag)
                             kopalnia.target.gracze.remove(ag)
 
-                        log = " <u>{0}</u> wydobył sól w ilości: {1}".format(ag.imie, liczbaKostekSoli)
-                        return jsonify(oknoGracza=ag.info(), log=log, wydobywam=True)
+                        log = " <u>{0}</u> wydobył sól w ilości: {1}".format(
+                            ag.imie, liczbaKostekSoli)
+                        return jsonify(
+                            oknoGracza=ag.info(),
+                            log=log,
+                            wydobywam=True)
                     else:
                         log = "Nie stać cię na przetransportowanie soli"
             return jsonify(log=log, alrt=4)
@@ -627,7 +647,7 @@ def modal():
                 if kopalnia.sprawdzZabranie(ag):
                     kopalnia.usunGracza(ag)
                     ag.gornicy += 1
-                    log = " <u>{0}</u> usunął robotnika z komnaty nr: {1}".format(
+                    log = "<u>{0}</u> usunął robotnika z komnaty nr: {1}".format(
                         ag.imie, str(indeks+1))
 
                     return jsonify(
@@ -681,11 +701,13 @@ def modal():
 
             ag.kasa -= cenaWydobycia
 
-            log = "<u>{0}</u> wydobył {1} wody z komnaty".format(ag.imie, len(kostkiWody))
+            log = "<u>{0}</u> wydobył {1} wody z komnaty".format(
+                ag.imie, len(kostkiWody))
 
             if czerpalnia.pomocnik:
                 czerpalnia.pomocnik.kasa += 1
-                log += " <u>{0}</u> dostał za to 1 grosz".format(czerpalnia.pomocnik.imie)
+                log += " <u>{0}</u> dostał za to 1 grosz".format(
+                    czerpalnia.pomocnik.imie)
 
             return jsonify(oknoGracza=ag.info(), log=log, wydobywam=True)
 
@@ -701,7 +723,7 @@ def miscTool():
 
     #
     if zmienna == "moveLeft" or zmienna == "moveRight":
-        if(ag.uzyjNarzedzie('czerpak')):
+        if(ag.uzyjNarzedzie("czerpak")):
             strona = kopalnia.sprawdzStroneKopalni(zmienna)
             kopalnia.przeniesWode(strona)
             log = "<u>{0}</u> przeniósł wodę czerpakiem".format(ag.imie)
@@ -709,7 +731,7 @@ def miscTool():
             return jsonify(oknoGracza=ag.info(), log=log, czerpak=strona)
 
     if zmienna == "potw":
-        if ag.uzyjNarzedzie('prowiant'):
+        if ag.uzyjNarzedzie("prowiant"):
             for x in range(2):
                 if ag in kopalnia.target.zmeczeni:
                     kopalnia.target.zmeczeni.remove(ag)

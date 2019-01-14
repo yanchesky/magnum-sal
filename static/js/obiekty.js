@@ -8,31 +8,14 @@ var globalObject = {
   dodajNarzedzie: function(e){
     this.aktywneNarzedzia.obiekty.push(e);
     this.aktywneNarzedzia.wartosci.push(e.getAttribute("value"));
-    this.pokazUkryte(e, true)
   },
 
   usunNarzedzie: function(e){
     this.aktywneNarzedzia.obiekty.splice(this.aktywneNarzedzia.obiekty.indexOf(e), 1 );
     this.aktywneNarzedzia.wartosci.splice(this.aktywneNarzedzia.wartosci.indexOf(e.getAttribute("value")), 1 );
-    this.pokazUkryte(e, false)
 
   },
 
-  pokazUkryte: function(e, h){
-    if(e.classList.contains("tool3") || e.classList.contains("tool4")){
-      console.log("Zawiera tool3 lub tool4")
-      for(let x of [...e.children]){
-        if(h){
-          x.style.display = "block";
-          x.addEventListener("click", executeUkryte)
-          e.removeEventListener("click", toggleNarzedzie)
-
-        }else{
-          x.style.display = "none";
-        }
-      }
-    }
-  },
 
   policzNarzedzie: function(szukaneNarzedzie){
     let i = 0;
@@ -50,15 +33,15 @@ var globalObject = {
     console.log(l)
 
     for(var i=0;i<l;i++){
-      this.gornicy[i].className += " zmeczony"
-      console.log(this.gornicy)
+      this.gornicy[i].classList.add("zmeczony");
+      console.log(this.gornicy);
     }
   },
 
   resetActiveTools: function(){
     for(var x of this.aktywneNarzedzia.obiekty){
-      x.classList.remove("aktywne-modal")
-      x.className += " uzyte-narzedzie"
+      x.classList.remove("aktywne-modal");
+      x.classList.add("uzyte-narzedzie");
     }
   },
 
@@ -68,7 +51,7 @@ var globalObject = {
     wstawZipka: function(e){
       for(var x of e){
         this.gornicyHolder.appendChild(x)
-        zipekIn([...this.gornicyHolder.children].slice(this.gornicy.length-1,this.gornicy.length), 0);
+        minerInAnime([...this.gornicyHolder.children].slice(this.gornicy.length-1,this.gornicy.length), 0);
       }
     },
     usunZipka: function(e){
@@ -76,8 +59,8 @@ var globalObject = {
       let id = obecnyGracz.firstElementChild.getAttribute("value");
 
       for(let x of [...this.gornicyHolder.children]){
-        if(x.classList.contains(id) && x.classList.contains("zmeczony") == false){
-          zipekOut(x);
+        if(x.classList.contains(id) && !x.classList.contains("zmeczony")){
+          minerOutAnime(x);
           break
         }
       }
@@ -134,21 +117,21 @@ var globalObject = {
     aktywneNarzedzia: [],
 
     wstawZipka: function(e){
-      for(var x of e){
+      for(let x of e){
         this.gornicyHolder.appendChild(x)
       }
-      zipekIn([...this.gornicyHolder.children].slice(0,e.length), 0);
+      minerInAnime([...this.gornicyHolder.children].slice(0,e.length), 0);
     },
 
     usunZipka: function(e){
-      zipekOut(this.gornicyHolder.firstElementChild);
+      minerOutAnime(this.gornicyHolder.firstElementChild);
 
     },
 
     zmeczZipka: function(e,kilofy){
-      let l = this.kostkiWody.length+e;
+      const l = this.kostkiWody.length+e;
 
-      let aktywniGornicy = document.querySelectorAll(".wymagany-gornik");
+      const aktywniGornicy = document.querySelectorAll(".wymagany-gornik");
       aktywniGornicy.forEach(function(e){
         e.classList.remove("wymagany-gornik");
         console.log(e.classList)
@@ -159,7 +142,7 @@ var globalObject = {
       this.gornicy[0].classList.add("zmeczony")
       console.log(this.gornicy)
 
-      for(var i=1;i<l-kilofy;i++){
+      for(let i=1;i<l-kilofy;i++){
         this.gornicy[i].classList.add("zmeczony")
         console.log(this.gornicy)
       }

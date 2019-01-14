@@ -1,5 +1,3 @@
-
-
 window.onload = function(){
 	const kartyNarzedzi = [...document.getElementById("karty-narzedzi").children];
 	const kartyZamowien = [...document.getElementById("zamowienia-krolewskie").children];
@@ -8,62 +6,61 @@ window.onload = function(){
 	const szyby = [...document.getElementsByClassName("szyb")];
 	const komnatyZakryte = [...document.getElementsByClassName("zakryte")];
 	const komnatyOdkryte = [...document.getElementsByClassName("odkryte")];
-	const beggary = document.getElementById("plac-zebralniczy");
-	const ziphouse = document.getElementById("karczma");
+	const zebralnia = document.getElementById("plac-zebralniczy");
+	const karczma = document.getElementById("karczma");
 	const kolejka = document.getElementById("droga-do-zamku");
-	const glejty = document.querySelectorAll('#narzedzia-gracza > div .glejtkrolewski, .glejthandlowy');
-	const endturnButton = document.getElementById("przycisk-konca-tury")
-	let playerTools = document.getElementById("narzedzia-gracza").firstElementChild
+	const glejty = document.querySelectorAll('#narzedzia-gracza > div .glejtkrolewski, #narzedzia-gracza > div .glejthandlowy');
+	const koniecTury = document.getElementById("przycisk-konca-tury")
+	const narzedziaGracza = document.getElementById("narzedzia-gracza").firstElementChild
 
 
-	kolejka.addEventListener("click", wstawDoKolejki);
+	kolejka.addEventListener("click", jumpInQue);
 
-	zrzucanieKartNew(kartyNarzedzi)
-	zrzucanieKartNew(kartyZamowien)
+	dropCardsAnime(kartyNarzedzi)
+	dropCardsAnime(kartyZamowien)
 
-	beggary.addEventListener("click", function(){
-		beggaryAndZiphouse(this);
-		//animacjaMonetyNew(this);
+	zebralnia.addEventListener("click", function(){
+		beggaryAndInn(this);
 	});
 
-	ziphouse.addEventListener("click", function(){
-		beggaryAndZiphouse(this);
+	karczma.addEventListener("click", function(){
+		beggaryAndInn(this);
 	});
 
 	pomocnicy.forEach(function(pomocnik){
-		pomocnik.addEventListener("click", togglePomocnik);
+		pomocnik.addEventListener("click", toggleHelper);
 	});
 
 	targowisko.forEach(function(slotSoli){
 		slotSoli.addEventListener("click", function(){
-			buySellTarg(targowisko, targowisko.indexOf(this))
+			buySellMarket(targowisko, targowisko.indexOf(this))
 		});
 	});
 
 	szyby.forEach(function(szyb){
 		szyb.addEventListener("click", function(){
-			clickSzyb(this, szyby.indexOf(this));
+			clickShaft(this, szyby.indexOf(this));
 		});
 	});
 
 	komnatyZakryte.forEach(function(komnata){
-		komnata.addEventListener("click", odkryjKomnate)
+		komnata.addEventListener("click", discoverChamber)
 	});
 
 	komnatyOdkryte.forEach(function(komnata){
-		komnata.addEventListener("click", otworzModal)
+		komnata.addEventListener("click", openModal)
 	})
 
 	glejty.forEach(function(glejt){
 		console.log(glejt);
 		if(!glejt.classList.contains("usedTool")){
-			glejt.addEventListener("click", toggleNarzedzie);
+			glejt.addEventListener("click", toggleTool);
 		}
 	})
 
-	endturnButton.addEventListener("click", zakonczTure)
+	koniecTury.addEventListener("click", finishTurn)
 
-	playerTools.addEventListener("mousemove", slideTools)
+	narzedziaGracza.addEventListener("mousemove", slideTools)
 
 
 

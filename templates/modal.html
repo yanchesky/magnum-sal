@@ -20,7 +20,7 @@
 
 		<div id="gornicy-wszystkich">
 			<div id="gornicy-gracza-modal">
-			{% for zip in kopalnia.zmeczeni %}
+			{% for zip in zmeczeniGracza %}
 				<div class='gornik pionek{{zip.lpGracza}} zmeczony' title='Zmęczeni'></div>
 			{% endfor %}
 			{% for zip in gornicy %}
@@ -29,6 +29,9 @@
 			</div>
 
 			<div id="gornicy-reszty-modal">
+				{% for zip in kopalnia.zmeczeni %}
+					<div class='gornik pionek{{zip.lpGracza}} zmeczony'></div>
+				{% endfor %}
 				{% for zip in reszta %}
 					<div class='gornik pionek{{zip.lpGracza}}'></div>
 				{% endfor %}

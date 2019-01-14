@@ -11,6 +11,9 @@ class KostkiSoli:
         self.zielona = zielona
         self.biala = biala
 
+    # Przeciążenie operatorów jest konieczne do poprawnego dodawania kostek
+    # soli w przyjętej konwencji
+
     def __add__(self, nowe):
         tmp = []
         for x, y in zip(self.kostki, nowe.kostki):
@@ -24,6 +27,10 @@ class KostkiSoli:
             tmp.append(x-y)
         self.kostki = tmp
         return self
+
+    # W tym wypadku przeciążenie operatorów umożliwia porównania kostek soli
+    # w obiektach klasy KostkiSoli. Jeśli któryś z odpowiadających elementów
+    # nie spełnia warunku, zwraca False
 
     def __ge__(self, nowe):
         tmp = []
@@ -53,6 +60,12 @@ class KostkiSoli:
                 return False
         return True
 
+    # Przeciążenie tego operatora zostało zastosowane na potrzeby poprawnego
+    # działania sprawdzania czy dane kostki znajdują się w jakimś zbiorze.
+    # np. if moje_kostki in zamowienia_krolewskie:
+    # Jeśli kostek jest mniej zwraca False, a jeśli jest ich równo lub więcej
+    # zwraca True
+
     def __eq__(self, nowe):
         tmp = []
         for x, y in zip(self.kostki, nowe.kostki):
@@ -60,8 +73,6 @@ class KostkiSoli:
                 return False
         return True
 
-    def __repr__(self):
-        return "Kostki("+str(self.kostki)+")"
 
 # Slot targu zajmowany jest przez 1 rodzaj kostek soli. Jest to odpowiednio 4,3,2
 # dla brązowej, zielonej i białej.
@@ -104,11 +115,11 @@ class ZamowienieKrolewskie():
         self.obliczNagrode()
 
     def obliczNagrode(self):
-        brown = self.kostkiSoli.brazowa
-        green = self.kostkiSoli.zielona
-        white = self.kostkiSoli.biala
+        brazowa = self.kostkiSoli.brazowa
+        zielona = self.kostkiSoli.zielona
+        biala = self.kostkiSoli.biala
 
-        kstk = (brown*5+green*7+white*11)-(3-(brown+green+white))
+        kstk = (brazowa*5 + zielona*7 + biala*11) - (3 - (brazowa + zielona + biala))
 
         self.nagroda = kstk
 
@@ -136,14 +147,14 @@ class Targowisko:
 
         if target.jestKostka:
             # Kupuje i szuka najniższej ceny
-            for y in target.slot.kostkiTargu:
-                if y.jestKostka:
-                    return y
+            for kostka in target.slot.kostkiTargu:
+                if kostka.jestKostka:
+                    return kostka
         else:
             # Sprzedaje i szuka najwyższej ceny
-            for y in reversed(target.slot.kostkiTargu):
-                if y.jestKostka == False:
-                    return y
+            for kostka in reversed(target.slot.kostkiTargu):
+                if kostka.jestKostka is False:
+                    return kostka
 
     # Zwraca listę wszystkich miejsc ja targu w formacie [b,z,B,b,z,B,b,z,b]
     # gdzie b - brązowa kostka soli; z - zielona; B - biała
@@ -170,8 +181,8 @@ class Karczma:
     def __init__(self, iloscGraczy=4):
         self.nazwa = "Karczma"
         self.copyKosztGornikow = Karczma.kosztGornikow[:]
-        self.kosztGornikow = Karczma.kosztGornikow[abs(iloscGraczy-4)*2:]
-        self.aktualnaPozycja = abs(iloscGraczy-4)*2
+        self.kosztGornikow = Karczma.kosztGornikow[abs(iloscGraczy - 4)*2:]
+        self.aktualnaPozycja = abs(iloscGraczy - 4)*2
 
     def info(self):
         tmp = []

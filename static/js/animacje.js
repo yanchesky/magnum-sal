@@ -1,4 +1,16 @@
-function zipekIn(target, delay){
+anime.easings['easeOutBounce'] = function(t) {
+  if ((t/=1) < (1/2.75)) {
+				return 1*(7.5625*t*t);
+			} else if (t < (2/2.75)) {
+				return 1*(7.5625*(t-=(1.5/2.75))*t + .75);
+			} else if (t < (2.5/2.75)) {
+				return 1*(7.5625*(t-=(2.25/2.75))*t + .9375);
+			} else {
+				return 1*(7.5625*(t-=(2.625/2.75))*t + .984375);
+			}
+}
+
+function minerInAnime(target, delay){
   for(var x of target){
     x.style.visibility = 'hidden';
   };
@@ -22,7 +34,7 @@ function zipekIn(target, delay){
   })
 }
 
-function zipekOut(target){
+function minerOutAnime(target){
   anime({
     targets: target,
     translateY: "+=70",
@@ -34,7 +46,7 @@ function zipekOut(target){
   })
 }
 
-function odkryjKafelek(target){
+function revealMineTileAnime(target){
   anime({
     targets: target,
     rotateY: [-180,0],
@@ -44,7 +56,7 @@ function odkryjKafelek(target){
   })
 }
 
-function togglePomocnikAnimation(dane, koord){
+function toggleHelperAnime(dane, koord){
   anime({
     targets: dane,
     backgroundPosition: koord+7+'px',
@@ -55,7 +67,7 @@ function togglePomocnikAnimation(dane, koord){
   });
 }
 
-function animacjaMonetyNew(obj){
+function coinAnime(obj){
   let powiekszenieMonety = obj.children[1]
   let obrotMonety = obj.children[1].firstElementChild
 
@@ -83,7 +95,7 @@ function animacjaMonetyNew(obj){
   })
 }
 
-function pokazMonetke(obj){
+function showCoinAnime(obj){
 
   anime({
     targets: obj,
@@ -94,7 +106,7 @@ function pokazMonetke(obj){
   })
 }
 
-function zrzucanieKartNew(obj){
+function dropCardsAnime(obj){
 	anime({
   	targets: obj,
     scale: [3,1],
@@ -112,9 +124,9 @@ function zrzucanieKartNew(obj){
     },
     complete: function(){
       if(obj[0].classList[0] == "karta-narzedzie"){
-        rozdanieKartNarzedzi(obj);
+        dealToolCardsAnime(obj);
       }else{
-        rozdanieKartZamowien(obj);
+        dealRoyalOrdersAnime(obj);
       }
 
 
@@ -122,7 +134,7 @@ function zrzucanieKartNew(obj){
   });
 }
 
-function rozdanieKartNarzedzi(obj){
+function dealToolCardsAnime(obj){
 
     var narzedziaDoRozdania = obj.slice(-3)
     var narzedziaDoObrotu = []
@@ -142,7 +154,7 @@ function rozdanieKartNarzedzi(obj){
 			loop: false,
 			autoplay: true,
       begin: function(){
-        obracanieKart(narzedziaDoObrotu)
+        revealCardsAnime(narzedziaDoObrotu)
       }
 
 		});
@@ -161,7 +173,7 @@ function rozdanieKartNarzedzi(obj){
 	});*/
 }
 
-function rozdanieKartZamowien(obj){
+function dealRoyalOrdersAnime(obj){
 
   var zamowieniaDoRozdania = obj.slice(-4)
   var zamowieniaDoObrotu = []
@@ -182,14 +194,14 @@ function rozdanieKartZamowien(obj){
   loop: false,
   autoplay: true,
   complete: function(){
-    obracanieKart(zamowieniaDoObrotu);
+    revealCardsAnime(zamowieniaDoObrotu);
   }
 
   });
 
 }
 
-function obracanieKart(obj){
+function revealCardsAnime(obj){
 	obj.reverse()
 
     anime({

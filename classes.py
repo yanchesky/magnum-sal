@@ -56,6 +56,7 @@ class Komnata:
 
         self.tlo = "l"+str(poziom)+"k"+str(x)
 
+
 class Szyb:
     def __init__(self):
         self.gracze = []
@@ -71,7 +72,6 @@ class Kopalnia:
         self.szyb = [Szyb() for i in range(pzm*2)]
 
         self.target = None
-
         self.poziom = None
         self.opakowanieTargetu = None
         self.opakowanieOpakowania = None
@@ -136,7 +136,8 @@ class Kopalnia:
                 print("Są komnaty obok")
                 poziom = (indeks-1)//2
                 for x in range(2):
-                    self.target.komnatySasiadujace.append(self.komnaty[poziom][x][0])
+                    self.target.komnatySasiadujace.append(
+                        self.komnaty[poziom][x][0])
 
     # Zwraca True, jeśli można wstawić górnika do szybu lub komnat kopalni
     def sprawdzWstawienie(self):
@@ -147,14 +148,16 @@ class Kopalnia:
                 return True
             else:
                 print("Sprawdzam, czy w szybie wyzej znajduja sie ludzie utrzymujacy ciaglosc")
-                if len(self.poprzedniObiekt.gracze) > 0:
+                #ERR
+                if self.poprzedniObiekt.gracze:
                     print("Są")
                     return True
 
                 print("Nie znalazlem zadnego robotnika w komnacie wyzej")
                 return False
         else:
-            if len(self.poprzedniObiekt.gracze)+len(self.poprzedniObiekt.zmeczeni) > 0:
+            #ERR
+            if self.poprzedniObiekt.gracze+self.poprzedniObiekt.zmeczeni:
                 return True
             print("Nie znalazlem zadnego robotnika w szybie obok")
             return False
@@ -174,7 +177,8 @@ class Kopalnia:
                 for gracz in gracze:
                     gracz.kasa += a
                     ag.kasa -= a
-                    print(gracz.imie, "Otrzymał", a, "groszy za pomoc w transporcie w komnacie", komnata)
+                    print(gracz.imie,
+                        "Otrzymał", a, "groszy za pomoc w transporcie w komnacie", komnata)
 
             # Rozdzielam losowo resztę
             if b != 0:
@@ -275,36 +279,36 @@ class Kopalnia:
             print("Tylko robotnik gracza zostal znaleziony")
 
             print("Sprawdzam czy szyb posiada komnaty sąsiadujące")
-            if len(self.target.komnatySasiadujace) > 0:
+            #ERR
+            if self.target.komnatySasiadujace:
                 print("Ma komnaty sąsiadujące. Sprawdzam, czy są w nich górnicy")
                 for x in self.target.komnatySasiadujace:
-                    if len(x.gracze+x.zmeczeni) > 0:
+                    #ERR
+                    if x.gracze+x.zmeczeni:
                         print("Znalazłem gracza w komnacie sąsiadującej. Nie mogę zabrać")
                         return False
 
             if self.indeksSzybu < 5:
-                if len(self.szyb[self.indeksSzybu+1].gracze) > 0:
+                #ERR
+                if self.szyb[self.indeksSzybu+1].gracze:
                     print("Zostal wykryty robotnik w komnacie nizej")
                     return False
 
             print("Nie wykryto robotnika w komnacie nizej. Robotnik zostal zabrany")
-            print("- - - - - - - - - - - - - - - - - - - - - - - - - - -")
             return True
         else:
             if self.nastepnyObiekt is None:
                 print("Zabrales robotnika z najbardziej oddalonej komnaty")
                 return True
             else:
-                print("- - - - - - - - - - - - - - - - - - - - - - - - - - -")
                 print("Sprawdzam czy jest ktoś jeszcze w komnacie")
                 if len(self.target.gracze+self.target.zmeczeni) > 1:
                     return True
-
-                if len(self.nastepnyObiekt.gracze+self.nastepnyObiekt.zmeczeni) > 0:  # 4 ilosc graczy
+                #ERR
+                if self.nastepnyObiekt.gracze+self.nastepnyObiekt.zmeczeni:  # 4 ilosc graczy
                     return False
 
                 print("Nie wykryto robotnika w komnacie obok. Robotnik zostal zabrany")
-                print("- - - - - - - - - - - - - - - - - - - - - - - - - - -")
                 return True
 
     # Przesuwa wodę na wybraną stronę po użyciu czerpaka. Jako parametr przyjmuje
@@ -325,7 +329,9 @@ class Kopalnia:
         for y in self.opakowanieOpakowania:
             if y is self.opakowanieTargetu:
                 strona = self.opakowanieOpakowania.index(y)
-                if ((strona == 0 and x == "moveLeft") or (strona == 1 and x == "moveRight")):
+                #ERR
+                if ((strona == 0 and x == "moveLeft")
+                    or (strona == 1 and x == "moveRight")):
                     return "moveForward"
                 else:
                     return "moveBackward"
@@ -374,7 +380,7 @@ class Gracze:
         self.uzyteBudynki = []
         self.kostkiSoli = KostkiSoli(3, 3, 2)
         self.imie = imie
-        self.narzedzia = [Narzedzie("prowiant","Prowiant"),Narzedzie("czerpak","Czerpak"), Narzedzie("lina", "Lina")]
+        self.narzedzia = []
         self.uzywaGlejtu = False
 
     # Wyczerpuje narzędzie do rozpoczęcia następnego tygodnia. jako parametr
@@ -382,7 +388,9 @@ class Gracze:
     # pomyślnie
     def uzyjNarzedzie(self, zadeklarowaneNarzedzie):
         for szukaneNarzedzie in self.narzedzia:
-            if szukaneNarzedzie.id == zadeklarowaneNarzedzie and szukaneNarzedzie.used == False:
+            #ERR
+            if (szukaneNarzedzie.id is zadeklarowaneNarzedzie
+                and szukaneNarzedzie.used is False):
                 szukaneNarzedzie.used = True
                 return True
         return False
@@ -456,7 +464,7 @@ class MagnumSal:
     def renderujPomocnikow(self):
         tmp = []
         for bzp in self.budynkiZPomocnikami:
-            if bzp.pomocnik == None:
+            if bzp.pomocnik is None:
                 tmp.append(0)
             else:
                 tmp.append((bzp.pomocnik.lpGracza))
