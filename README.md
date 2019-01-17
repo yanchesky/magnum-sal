@@ -8,7 +8,7 @@
 - [Prawa autorskie](#prawa-autorskie)
 
 
-![alt text](https://github.com/yanchesky/MS/raw/master/readmefiles/main.jpg)
+![alt text](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/main.jpg)
 
 
 ## Instalacja
@@ -72,17 +72,17 @@ Zmiany zaadaptowane do elektronicznej wersji gry, różniące się od wersji pla
 **Wstawienie do szybu**
 Wstawienie do szybu następuje po kliknięciu w kartę szybu. Jeśli nie ma tam naszego górnika, to jest on wstawiany. Jeśli jest, to będzie on automatycznie zabierany. 
 
-![gif](https://github.com/yanchesky/MS/blob/test/readmefiles/Untitled.gif)
+![gif](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/Untitled.gif)
 
 **Wstawienie do komnaty**
 Wstawienie do komnaty następuje automatycznie w przypadku, kiedy komnata jest jeszcze nieodkryta. Jeśli jest odkryta, pojawia się **okno komnaty** w którym możemy wykonać wstawienie lub zabranie górnika z szybu.
 
-![gif](https://github.com/yanchesky/MS/blob/test/readmefiles/wstawienie.gif)
+![gif](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/wstawienie.gif)
 
 ### Wydobycie soli oraz wody
 Korzystanie z budynku szybu wodnego, odbywa się w oknie komnaty. Należy zaznaczyć tyle wody ile chce się wydobyć. Po zaznaczeniu pojawi się cena wydobycia i następnie trzeba kliknąć ikonę pompy. W przypadku wydobycia soli, należy analogicznie zaznaczyć kostki soli. Po zaznaczeniu, podniesie się tylu górników, ilu jest wymaganych do wydobycia konkretnej ilości soli.
 
-![gif](https://github.com/yanchesky/MS/blob/test/readmefiles/wydobycie.gif)
+![gif](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/wydobycie.gif)
 
 ### Odpodczynek
 Aby górnicy odpoczeli, należy nie wykonywać żadnej akcji i wcisnąć przycisk końca tury
@@ -90,12 +90,12 @@ Aby górnicy odpoczeli, należy nie wykonywać żadnej akcji i wcisnąć przycis
 ### Narzędzia
 Wszystkie narzędzia z wyłączeniem glejtu królewskiego i glejtu handlowego, używane są z poziomu okna komnaty. Po kupieniu ich w warsztacie, pojawią w oknie komnaty pod sekcją wydobycia wody. Aby zadeklarować chęć użycia danego narzędzia należy na niego kliknąć, a następnie wykonać żądanie powiązane z danym narzedziem. Dla kilofa i wózka jest to wydobycie, dla liny wstawienie górnika. Prowiant i czerpak działają inaczej. Po kliknięciu, pojawi się odpowiednio przycisk potwierdzający albo strzałki ze stronami na które chcemy przenieść wodę. W przypadku tych narzędzi wystarczy kliknąć jeden z przycisków aby zrealizować chęć użycia narzędzia.
 
-![gif](https://github.com/yanchesky/MS/blob/test/readmefiles/narzedzia.gif)
+![gif](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/narzedzia.gif)
 
 W przypadku glejtu królewskiego i handlowego, chęć użycia deklarujemy w **oknie zasobów gracza**.
 W oknie zasobów mamy również informacje o aktualnym graczu i ilości jego wykonanych akcji, ilości wolnych górników, posiadanych kostkach soli oraz poniądzach.
 
-![gif](https://github.com/yanchesky/MS/blob/test/readmefiles/oknogracza.jpg)
+![gif](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/oknogracza.jpg)
 
 ## Dodatkowe informacje
 ### Ograniczenia w bieżącej wersji gry
