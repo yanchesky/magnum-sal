@@ -10,6 +10,7 @@ anime.easings['easeOutBounce'] = function(t) {
 			}
 }
 
+
 function minerInAnime(target, delay){
   for(var x of target){
     x.style.visibility = 'hidden';
@@ -123,7 +124,7 @@ function dropCardsAnime(obj){
       return i * 150;
     },
     complete: function(){
-      if(obj[0].classList[0] == "karta-narzedzie"){
+      if(obj[0].classList.contains("karta-narzedzie")){
         dealToolCardsAnime(obj);
       }else{
         dealRoyalOrdersAnime(obj);

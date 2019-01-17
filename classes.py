@@ -373,14 +373,14 @@ class Gracze:
     iloscAktualnychGraczy = 0
 
     def __init__(self, imie):
-        self.gornicy = 7
+        self.gornicy = 4
         self.lpGracza = 1 + Gracze.iloscAktualnychGraczy
-        self.kasa = 50 + Gracze.iloscAktualnychGraczy * 2
+        self.kasa = 10 + Gracze.iloscAktualnychGraczy * 2
         self.akcje = 0
         self.uzyteBudynki = []
-        self.kostkiSoli = KostkiSoli(3, 3, 2)
+        self.kostkiSoli = KostkiSoli(1, 0, 0)
         self.imie = imie
-        self.narzedzia = []
+        self.narzedzia = [Narzedzie("glejthandlowy","Glejt Handlowy"),Narzedzie("glejtkrolewski", "Glejt Królewski"),Narzedzie("czerpak", "Czerpak"),Narzedzie("wozek", "Wózek")]
         self.uzywaGlejtu = False
 
     # Wyczerpuje narzędzie do rozpoczęcia następnego tygodnia. jako parametr
@@ -405,7 +405,7 @@ class Gracze:
     # Zwraca True, jeśli gracz posiada wolne akcje i nie korzystał z budynku.
     # Opcjonalnie jako parametr przyjmuje budynek
     def dostepnaAkcja(self, budynek=None):
-        if self.akcje < 22 and budynek not in self.uzyteBudynki:
+        if self.akcje < 2 and budynek not in self.uzyteBudynki:
             return True
         else:
             return False
@@ -442,9 +442,11 @@ class MagnumSal:
     # Dodaje do zmiennej budynki, które mają możliwość wstawienia górnika
     # jako pomocnika
 
-    def dodajBudynkiZPomocnikami(self, *budynki):
-        for x in budynki:
-            self.budynkiZPomocnikami.append(x)
+    def dodajBudynkiZPomocnikami(self, pierwszy, drugi, trzeci, czwarty):
+        self.budynkiZPomocnikami.append(pierwszy)
+        self.budynkiZPomocnikami.append(drugi)
+        self.budynkiZPomocnikami.append(trzeci)
+        self.budynkiZPomocnikami.append(czwarty)
 
     # Kończy turę obecnego gracza, restuje akcje i czyści listę użytych budynków
     def zakonczTure(self):

@@ -15,7 +15,6 @@ function actionTime() {
   }
 
   return godzina +":"+ minuta +":"+ sekunda;
-
 }
 
 function gameLog(x){
@@ -69,6 +68,7 @@ function setEventListeners(){
   const narzedzia = [...document.getElementsByClassName("narzedzie-modal")];
   const kostkiSoli = [...document.getElementsByClassName("solBox")];
   const kostkiWody = [...document.getElementsByClassName("wodaBox")];
+  const przyciskZamkniecia = document.getElementById("zamknij-button")
 
 
   przyciski.forEach(function(przycisk){
@@ -85,6 +85,8 @@ function setEventListeners(){
   kostkiWody.forEach(function(woda){
     woda.addEventListener("change", showWaterPumpPrice)
   });
+
+  przyciskZamkniecia.addEventListener("click", function(){hideModal("kopalnia-modal")});
 
   document.addEventListener("click", function mod(e){
     const modal = document.getElementById("kopalnia-modal")
@@ -183,7 +185,6 @@ function executeModal(e){
 
     gameLog(data);
 
-
     if(data.wstawiam){
       const liny = globalObject.policzNarzedzie("lina")
 
@@ -226,6 +227,10 @@ function executeModal(e){
         }
         showWaterPumpPrice()
       }
+
+      globalObject.modal.zmeczZipka(listaKostekModal.obiekty.length,i)
+      globalObject.kopalnia.zmeczZipka(listaKostekModal.obiekty.length,i)
+
     }
 
     if(indeks===0){
@@ -237,9 +242,6 @@ function executeModal(e){
           i++
         }
       }
-
-      globalObject.modal.zmeczZipka(listaKostekModal.obiekty.length,i)
-      globalObject.kopalnia.zmeczZipka(listaKostekModal.obiekty.length,i)
     }
 
     globalObject.resetActiveTools();
@@ -313,10 +315,8 @@ function toggleHelper(e){
   const stanowiska = [...document.getElementsByClassName("pomocnik")];
   const indeks = stanowiska.indexOf(e.currentTarget);
 
-  $.getJSON("/helper",{a:indeks},function(data){
-    if(data.oknoGracza){
-      gameLog(data)
-    }
+  $.getJSON("/pomocnik",{a:indeks},function(data){
+    gameLog(data)
     if(data.wstawiam){
       console.log(e.target.parentNode)
       toggleHelperAnime(e.target.parentNode, data.gracz);
@@ -367,7 +367,7 @@ function buySellMarket(targowisko, indeks){
 
 function clickShaft(target, indeks){
 
-  $.getJSON('/shaftHolder',{a:indeks}, function(data){
+  $.getJSON('/szyb',{a:indeks}, function(data){
     gameLog(data);
 
     const holder = target.firstElementChild;
@@ -397,7 +397,7 @@ function createMiner(target, pionek){
 
 function clickRoom(target, indeks){
 
-  $.getJSON('/roomHolder',{a:indeks},function(data){
+  $.getJSON('/komnata',{a:indeks},function(data){
 
     gameLog(data);
 
@@ -446,7 +446,7 @@ function clickRoom(target, indeks){
 
 function renderModal(indeks){
 
-  $.getJSON("/render_modal",{a:indeks}, function(data){
+  $.getJSON("/renderuj-modal",{a:indeks}, function(data){
     showModal('kopalnia-modal');
 
   	const okn = document.getElementById('cialo-modal-kopalnia');
@@ -482,7 +482,7 @@ function executeHidden(e){
   e.target.parentNode.classList.remove("activeTool");
   e.target.parentNode.classList.add("uzyte-narzedzie");
 
-  $.getJSON('/miscTool',{a:e.currentTarget.id}, function(data){
+  $.getJSON('/narzedzia-inne',{a:e.currentTarget.id}, function(data){
     if(data.czerpak){
 
       const wodaKomnata = aktualnaKomnata.querySelector(".rd3")
@@ -555,7 +555,7 @@ function jumpInQue(e){
   const narzedzia = globalObject.aktywneNarzedzia;
   const stanowiskaKolejki = [...document.getElementsByClassName("kolejka-do-zamku")];
   console.log(narzedzia)
-  $.getJSON("/queue", {a:JSON.stringify(narzedzia.wartosci)}, function(data){
+  $.getJSON("/droga-do-zamku", {a:JSON.stringify(narzedzia.wartosci)}, function(data){
     gameLog(data);
     if(data.lpGracza){
       let holder;
@@ -592,7 +592,7 @@ function completeRoyalOrder(e){
   const absIndeks = zamowieniaModal.indexOf(e.currentTarget)
   const indeks = zamowieniaModal.length-absIndeks-1;
 
-  $.getJSON("/zamowieniaKrolewskie", {a:indeks},function(data){
+  $.getJSON("/zamowienia-krolewskie", {a:indeks},function(data){
     if(data.realizujeZamowienie){
       gameLog(data);
       zamowieniaModal[absIndeks].remove();
@@ -632,7 +632,7 @@ function completeRoyalOrder(e){
 }
 
 function finishTurn(e){
-  $.getJSON("/endturn",{},function(data){
+  $.getJSON("/koniec-tury",{},function(data){
     hideModal("kopalnia-modal");
     const kolejka = document.getElementById("droga-do-zamku")
     kolejka.innerHTML = data.que;

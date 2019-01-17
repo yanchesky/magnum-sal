@@ -128,14 +128,14 @@ polygon {
 
 #pomocnik1 {
 	position:absolute;
-	left:700px;
-	top:200px;
+	left:690px;
+	top:210px;
 }
 
 #pomocnik2{
 	position:absolute;
-	left:270px;
-	top:500px;
+	left:170px;
+	top:560px;
 }
 
 #pomocnik3{
@@ -279,22 +279,30 @@ svg text{
 .rewers-karty {
 	position: absolute;
   backface-visibility: hidden;
-  z-index:1;
-	top: 0;
+  -webkit-backface-visibility: hidden;
+  z-index:2;
+  top: 0;
 	left: 0;
 	transform: rotateY(180deg);
 }
 
 .awers-karty {
+  position:relative;
+  z-index: -1;
+  -webkit-transform: rotateY(0deg)
   transform: rotateY(0deg);
 }
 
+
 .flipper{
   transform-style: preserve-3d;
-  transform: rotateY(180deg);
   position: relative;
+  transform: rotateY(180deg)
 }
 
+.flipper{
+  transition-duration: 0s;
+}
 .karta-zamowienie .flipper .awers-karty{
   background-position-x:-90px;
 }
@@ -523,6 +531,10 @@ input[type="checkbox"]:checked + label{
   position: relative;
   float:left;
   background-image: url('sprites/narzedzia.jpg');
+}
+
+.narzedzie-klikalne{
+  cursor: pointer;
 }
 
 .kilof{
@@ -853,6 +865,20 @@ input[type="checkbox"]:checked + label{
 
 .przyciski-narzedzi{
   display:none;
+}
+
+#zamknij-button{
+  position:relative;
+  float: right;
+  right:-15px;
+  top:-30px;
+  color: white;
+  font-size: 40px;
+  cursor:pointer;
+}
+
+#zamknij-button:hover{
+  color:grey;
 }
 
 /* - - - - - - - - - - - - - - - - - - */

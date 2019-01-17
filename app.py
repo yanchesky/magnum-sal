@@ -25,14 +25,15 @@ bialaKostkaSoli = SlotKostek(KostkiSoli(0, 0, 1), 7, 8)
 targ = Targowisko(brazowaKostkaSoli, zielonaKostkaSoli, bialaKostkaSoli)
 
 # Gra w postaci parametrów przyjmuje imiona graczy
-gra = MagnumSal('Janek', 'Pisul', "Ala")
+gra = MagnumSal('Janek', 'Bartek')
+MAX_ZREALIZOWANYCH_ZAMOWIEN = 7
+
 gra.dodajBudynkiZPomocnikami(zamek, warsztat, czerpalnia, targ)
 
 
 @app.route('/')
 def stronaStartowa():
     ag = gra.aktualnyGracz
-
     return render_template('glowna.html',
                            narzedzia=warsztat.narzedzia[:3],
                            resztaKart=[len(warsztat.narzedzia)-3,
@@ -44,8 +45,9 @@ def stronaStartowa():
                            pomocnicy=gra.renderujPomocnikow(),
                            kopalnia=kopalnia,
                            zrealizowaneZamowieniaVar=zamek.zrealizowaneZamowienia,
+                           maksZamowien=MAX_ZREALIZOWANYCH_ZAMOWIEN,
                            playerTools=[x for x in ag.narzedzia if x.used is False] +
-                           [x for x in ag.narzedzia if x.used == True],
+                           [x for x in ag.narzedzia if x.used is True],
                            ag=ag,
                            kosztGornikowVar=karczma.info()
                            )
@@ -86,7 +88,7 @@ def budynekKarczmy():
         return jsonify(alrt=alrt)
 
 
-@app.route('/queue')
+@app.route('/droga-do-zamku')
 def kolejkaDoZamku():
 
     ag = gra.aktualnyGracz
@@ -145,8 +147,8 @@ def placZebralniczy():
         return jsonify(alrt=alrt)
 
 
-@app.route('/endturn')
-def endturn():
+@app.route('/koniec-tury')
+def koniecTury():
 
     ag = gra.aktualnyGracz
     log = "<u>{0}</u> zakończył turę".format(ag.imie)
@@ -163,6 +165,24 @@ def endturn():
     gra.zakonczTure()
 
     ag = gra.aktualnyGracz
+
+    if zamek.zrealizowaneZamowienia == MAX_ZREALIZOWANYCH_ZAMOWIEN and ag.lpGracza == 1:
+        grosze = 0
+        groszeZaNarzedzia = 0
+        groszeZaSol = 0
+        imie = ""
+        for gracz in gra.gracze:
+            groszeZaNarzedzia = len(gracz.narzedzia)
+            groszeZaSol = len(gracz.kostkiSoli)
+            print(gracz.kasa + groszeZaNarzedzia + groszeZaSol)
+            if (gracz.kasa + groszeZaNarzedzia + groszeZaSol) > grosze:
+                grosze = gracz.kasa + groszeZaNarzedzia + groszeZaSol
+                imie = gracz.imie
+
+        log = "Zwyciężył {0} mając {1} groszy w tym {2} za narzędzia".format(
+            imie, grosze, groszeZaNarzedzia)
+        return jsonify(alrt=1, log=log)
+
 
     for realizujacyZamowienie in [x for x in zamek.kolejka.drugiEtap if x is ag]:
         zamek.kolejka.drugiEtap.remove(ag)
@@ -199,15 +219,15 @@ def endturn():
     )
 
 
-@app.route('/helper')
+@app.route('/pomocnik')
 def ustawPomocnika():
 
     ag = gra.aktualnyGracz
 
-    if ag.dostepnaAkcja():
-        indeks = request.args.get('a', 0, type=int)
-        bzp = gra.budynkiZPomocnikami[indeks]
 
+    if ag.dostepnaAkcja():
+        bzp = gra.budynkiZPomocnikami[indeks]
+        indeks = request.args.get('a', 0, type=int)
         if bzp.pomocnik is None and ag.gornicy > 0:
             ag.gornicy -= 1
             bzp.pomocnik = ag
@@ -304,11 +324,13 @@ def targowisko():
         )
 
     else:
-        return jsonify(
-            oknoGracza=ag.info(),
-            zmiennaJSON=None,
-            alrt=1
-        )
+        alrt=0
+        if targ in ag.uzyteBudynki:
+            alrt = 3
+        if ag.akcje == 2:
+            alrt = 2
+
+        return jsonify(alrt=alrt)
 
 
 @app.route('/karty-narzedzi')
@@ -363,7 +385,7 @@ def narzedzia():
         return jsonify(alrt=alrt)
 
 
-@app.route('/zamowieniaKrolewskie')
+@app.route('/zamowienia-krolewskie')
 def zamowienia():
 
     ag = gra.aktualnyGracz
@@ -415,7 +437,7 @@ def zamowienia():
         return jsonify(log=log, alrt=1)
 
 
-@app.route('/shaftHolder')
+@app.route('/szyb')
 def shaft():
 
     ag = gra.aktualnyGracz
@@ -474,7 +496,7 @@ def shaft():
     )
 
 
-@app.route('/render_modal')
+@app.route('/renderuj-modal')
 def rend_mod():
 
     ag = gra.aktualnyGracz
@@ -491,8 +513,10 @@ def rend_mod():
                                 if x is ag],
                             reszta=[x for x in kopalnia.target.gracze
                                 if x is not ag],
-                            narzedzia=[x for x in ag.narzedzia if
-                                x.id != "glejthandlowy"
+                            zmeczeniReszta=[x for x in kopalnia.target.zmeczeni
+                                if x is not ag],
+                            narzedzia=[x for x in ag.narzedzia
+                                if x.id != "glejthandlowy"
                                 and x.id != "glejtkrolewski"
                                 and x.used is False],
                             kopalnia=kopalnia.target,
@@ -501,7 +525,7 @@ def rend_mod():
     return jsonify(oknoGracza=ag.info(), modal=modal)
 
 
-@app.route('/roomHolder')
+@app.route('/komnata')
 def room():
 
     ag = gra.aktualnyGracz
@@ -715,7 +739,7 @@ def modal():
         return jsonify(alrt=2)
 
 
-@app.route('/miscTool')
+@app.route('/narzedzia-inne')
 def miscTool():
 
     ag = gra.aktualnyGracz
@@ -725,10 +749,13 @@ def miscTool():
     if zmienna == "moveLeft" or zmienna == "moveRight":
         if(ag.uzyjNarzedzie("czerpak")):
             strona = kopalnia.sprawdzStroneKopalni(zmienna)
-            kopalnia.przeniesWode(strona)
-            log = "<u>{0}</u> przeniósł wodę czerpakiem".format(ag.imie)
+            if kopalnia.target.woda:
+                kopalnia.przeniesWode(strona)
+                log = "<u>{0}</u> przeniósł wodę czerpakiem".format(ag.imie)
 
-            return jsonify(oknoGracza=ag.info(), log=log, czerpak=strona)
+                return jsonify(oknoGracza=ag.info(), log=log, czerpak=strona)
+            else:
+                return jsonify(alrt=1)
 
     if zmienna == "potw":
         if ag.uzyjNarzedzie("prowiant"):

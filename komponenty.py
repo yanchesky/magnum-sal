@@ -73,6 +73,15 @@ class KostkiSoli:
                 return False
         return True
 
+    # Liczy ilość kostek soli po każdym z rodzaju i zwraca sumę
+
+    def __len__(self):
+        tmp = 0
+        for kostka in self.kostki:
+            for x in range(kostka):
+                tmp += 1
+        return tmp
+
 
 # Slot targu zajmowany jest przez 1 rodzaj kostek soli. Jest to odpowiednio 4,3,2
 # dla brązowej, zielonej i białej.

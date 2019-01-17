@@ -1,4 +1,6 @@
 {% block modal %}
+<span id="zamknij-button">&#10006;</span>
+
 	<div id="matsy-modal">
 		<div class='przycisk-wydobycia-soli przycisk'></div>
 		{% for mat in kopalnia.kostki.kostki %}
@@ -29,7 +31,7 @@
 			</div>
 
 			<div id="gornicy-reszty-modal">
-				{% for zip in kopalnia.zmeczeni %}
+				{% for zip in zmeczeniReszta %}
 					<div class='gornik pionek{{zip.lpGracza}} zmeczony'></div>
 				{% endfor %}
 				{% for zip in reszta %}
