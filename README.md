@@ -14,7 +14,7 @@
 ## Instalacja
 **1. Pobranie repozytorium**
 ```
-git clone https://github.com/yanchesky/MS.git
+git clone https://github.com/yanchesky/magnum-sal.git
 ```
 **2. Instalacja Virtualenv**
 ```
