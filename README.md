@@ -12,15 +12,18 @@
 
 
 ## Instalacja
-**1. Pobranie repozytorium**
+**1. Pobranie repozytorium i przejście do folderu**
 ```
 git clone https://github.com/yanchesky/magnum-sal.git
+```
+```
+cd magnum-sal
 ```
 **2. Instalacja Virtualenv**
 ```
 pip install virtualenv
 ```
-**3. Stworzenie wirtualnego środowiska w katalogu aplikacji**
+**3. Stworzenie wirtualnego środowiska w katalogu aplikacji **
 ```
 virtualenv magnum_sal
 ```
