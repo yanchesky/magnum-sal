@@ -50,9 +50,9 @@ function minerOutAnime(target){
 function revealMineTileAnime(target){
   anime({
     targets: target,
-    rotateY: [-180,0],
+    rotateY: 0,
     loop: false,
-    duration: 1600,
+    //duration: 1600,
     autoplay: true
   })
 }
@@ -188,7 +188,7 @@ function dealRoyalOrdersAnime(obj){
   targets: zamowieniaDoRozdania,
   delay:function(target, index, totalTargets){return (totalTargets-index) * 100},
   top: 33,
-  left: function(target, index, totalTargets){return -70+(totalTargets-index)*104},
+  left: function(target, index, totalTargets){return -25+(totalTargets-index)*104},
 
   easing: 'easeOutExpo',
   duration: 800,
