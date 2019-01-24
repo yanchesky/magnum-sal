@@ -107,8 +107,8 @@ polygon {
 #sklep-z-narzedziami {
   float: left;
 	position: absolute;
-	left:780px;
-  width: 430px;
+	left:820px;
+  width: 130px;
   height: 187px;
 }
 
@@ -251,7 +251,7 @@ svg text{
 /* - - - - - - - - - - - - - - - - - - - - - */
 
 #zamowienia-krolewskie > div{
-  left:345px;
+  left:400px;
   top:130px;
 }
 
@@ -281,8 +281,8 @@ svg text{
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   z-index:2;
-  top: 0;
-	left: 0;
+  top: 0px;
+	left: 0px;
 	transform: rotateY(180deg);
 }
 
@@ -296,7 +296,7 @@ svg text{
   transform-style: preserve-3d;
   position: relative;
   transform: rotateY(180deg);
-  transition: 1s;
+  transition: 0.8s;
   transition-timing-function: cubic-bezier(0.25, 1.23, 0.77, 1.13);
 }
 
@@ -311,11 +311,13 @@ svg text{
 .karta-zamowienie .flipper > div{
   height:90px;
   width:90px;
+  left:-45px;
 }
 
 .narzedzie, .karta-narzedzie .flipper > div{
   width:90px;
   height:140px;
+  left:-45px;
 }
 
 .komnata .flipper > div, .szyb{
