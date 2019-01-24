@@ -39,7 +39,7 @@ pip install -r requirements.txt
 **1. Otworzyć plik** `/app.py` **i wpisać imiona graczy. Min - 2, Max - 4**
 ```
 28. gra = MagnumSal('Gracz1', 'Gracz2')
-``` 
+```
 **2. Opcjonalnie ustawić ilość zamówień do zrealizowania. Domyślnie 7
 ```
 29. MAX_ZREALIZOWANYCH_ZAMOWIEN = 7
@@ -48,13 +48,13 @@ pip install -r requirements.txt
 ```
 python app.py
 ```
-**4. Wpisać w przeglądarkę internetową Firefox\*.**
+**4. Wpisać w przeglądarkę internetową ~~Firefox\*~~.**
 ```
 127.0.0.1:5000
 ```
-\*Niestety obecna wersja działa tylko na Firefoxie. Google Chrome i Safari mają problem z renderowaniem animacji obracania kart. 
+\~~*Niestety obecna wersja działa tylko na Firefoxie. Google Chrome i Safari mają problem z renderowaniem animacji obracania kart.~~ Poprawione
 
-## Zasady 
+## Zasady
 
 Pełne zasady gry są dostępne na stronie gry o tej samej nazwie na portalu https://rebel.pl
 
@@ -69,11 +69,11 @@ Zmiany zaadaptowane do elektronicznej wersji gry, różniące się od wersji pla
 5. Cena kupna lub sprzedaży kostki soli na targu, pojawia się po najechaniu myszką na odpowiednie miejsce
 6. Użycie prowiantu i liny ograniczone jest tylko do 1 komnaty
 7. Użycie wózka powoduje automatyczne znalezienie najopłacalniejszego miejsca do zastosowania. Jeśli jest ich więcej niż 1, to wybiera je losowo. Podwójne użycie wózka pozwala ominąć więcej komnat, a nie przewieźć więcej soli. Max 2 soli na wózek.
-8. Podział pieniędzy za pomoc w transporcie kostek soli jest równomierny między graczy zajmujących komnatę, jeśli kwota jest podzielna na ilość graczy. W przeciwnym wypadku gracze są losowani. 
+8. Podział pieniędzy za pomoc w transporcie kostek soli jest równomierny między graczy zajmujących komnatę, jeśli kwota jest podzielna na ilość graczy. W przeciwnym wypadku gracze są losowani.
 
 ### Wstawianie górnika do kopalni
 **Wstawienie do szybu**
-Wstawienie do szybu następuje po kliknięciu w kartę szybu. Jeśli nie ma tam naszego górnika, to jest on wstawiany. Jeśli jest, to będzie on automatycznie zabierany. 
+Wstawienie do szybu następuje po kliknięciu w kartę szybu. Jeśli nie ma tam naszego górnika, to jest on wstawiany. Jeśli jest, to będzie on automatycznie zabierany.
 
 ![gif](https://github.com/yanchesky/magnum-sal/raw/master/readmefiles/Untitled.gif)
 
@@ -117,12 +117,12 @@ Poza wyeliminowaniem wyżej wymienionych ograniczeń, w planach jest wdrożenie 
   - Poprawne działanie animacji na wszystkich przeglądarkach internetowych
   - Dodanie baz danych przechowujących zasoby graczy, stan gry, wyniki końcowe
   - Dodanie menu początkowe z logowaniem, opcją stworzenia stołów do gry i możliwością dołączenia do stołu
-  - Umieścić aplikację na serwerze i z obsługą WebSocket 
+  - Umieścić aplikację na serwerze i z obsługą WebSocket
 
 ## Prawa autorskie
 Ilustracje planszy, komnat i szybów, narzędzi, grafiki monet oraz rewersów kart są dziełem Piotra Nowojewskiego. Zostały pobrane z serwisu https://boardgamegeek.com , gdzie zostały udostępnione przez autora.
 
-Inne grafiki zostały pobrane ze strony http://punchev.com/fui-gameart-gui/ i przerobione do własnych wymagań. 
+Inne grafiki zostały pobrane ze strony http://punchev.com/fui-gameart-gui/ i przerobione do własnych wymagań.
 
 Projekt gry i zasady są dziełem Marcina Krupińskiego i Filipa Miłuńskiego.
 
