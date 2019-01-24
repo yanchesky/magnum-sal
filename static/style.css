@@ -276,7 +276,7 @@ svg text{
 	float:right;
 }
 
-.rewers-karty {
+.rewers-karty, .awers-karty {
 	position: absolute;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -287,9 +287,7 @@ svg text{
 }
 
 .awers-karty {
-  position:relative;
-  z-index: -1;
-  -webkit-transform: rotateY(0deg)
+  z-index: 1;
   transform: rotateY(0deg);
 }
 
@@ -297,12 +295,15 @@ svg text{
 .flipper{
   transform-style: preserve-3d;
   position: relative;
-  transform: rotateY(180deg)
+  transform: rotateY(180deg);
+  transition: 1s;
+  transition-timing-function: cubic-bezier(0.25, 1.23, 0.77, 1.13);
 }
 
-.flipper{
-  transition-duration: 0s;
+.flipper.flip{
+  transform: rotateY(-0deg)
 }
+
 .karta-zamowienie .flipper .awers-karty{
   background-position-x:-90px;
 }

@@ -402,6 +402,7 @@ function clickRoom(target, indeks){
     gameLog(data);
 
     if(data.odkrywam){
+      target.parentNode.classList.add("flip");
       const komnata = target.parentNode.parentNode;
 
       komnata.classList.remove("zakryte");
@@ -436,7 +437,7 @@ function clickRoom(target, indeks){
       kafelek.appendChild(woda);
 
       minerInAnime([zipHolder],1500);
-      revealMineTileAnime(target.parentNode);
+      //revealMineTileAnime(target.parentNode);
       target.parentNode.parentNode.removeEventListener("click", discoverChamber)
       target.parentNode.parentNode.addEventListener("click", openModal)
 
