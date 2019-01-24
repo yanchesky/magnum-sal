@@ -52,7 +52,7 @@ python app.py
 ```
 127.0.0.1:5000
 ```
-\~~*Niestety obecna wersja działa tylko na Firefoxie. Google Chrome i Safari mają problem z renderowaniem animacji obracania kart.~~ Poprawione
+~~\*Niestety obecna wersja działa tylko na Firefoxie. Google Chrome i Safari mają problem z renderowaniem animacji obracania kart.~~ **Poprawione**
 
 ## Zasady
 
