@@ -228,20 +228,21 @@ function executeModal(e){
         showWaterPumpPrice()
       }
 
-      globalObject.modal.zmeczZipka(listaKostekModal.obiekty.length,i)
-      globalObject.kopalnia.zmeczZipka(listaKostekModal.obiekty.length,i)
+
 
     }
 
     if(indeks===0){
       hideModal("kopalnia-modal");
-      let i=0;
+      let kilof=0;
 
       for(let narzedzie of globalObject.aktywneNarzedzia.wartosci){
         if(narzedzie==="kilof"){
-          i++
+          kilof++
         }
       }
+      globalObject.modal.zmeczZipka(listaKostekModal.obiekty.length,kilof)
+      globalObject.kopalnia.zmeczZipka(listaKostekModal.obiekty.length,kilof)
     }
 
     globalObject.resetActiveTools();
@@ -637,6 +638,10 @@ function finishTurn(e){
     hideModal("kopalnia-modal");
     const kolejka = document.getElementById("droga-do-zamku")
     kolejka.innerHTML = data.que;
+
+    if(data.reload){
+      window.location.replace(""); 
+    }
 
 		gameLog(data);
 

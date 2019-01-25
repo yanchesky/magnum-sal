@@ -30,7 +30,7 @@
 {% block ordery %}
 
   {% for tyl in range(resztaKart[1]) %}
-  <div class="karta-zamowienie order-zakryty">
+  <div class="karta-zamowienie tydzien{{tydzien}} order-zakryty">
     <div class="flipper">
       <div class="rewers-karty">
       </div>
@@ -42,7 +42,7 @@
 
   {% block zamowieniaModal %}
 	{% for zamowienie in zamowienia | reverse() %}
-	<div class="karta-zamowienie" title="Zamówienia królewskie">
+	<div class="karta-zamowienie tydzien{{tydzien}}" title="Zamówienia królewskie">
     <div class="flipper">
       <div class="rewers-karty">
       </div>
@@ -100,6 +100,24 @@
         </svg>
     {% endif %}
   {% endfor %}
+
+{% endblock %}
+
+{% block aktualnyTydzien %}
+
+{% for x in range(3) %}
+  {% if tydzien == loop.index %}
+      <svg height="23" width="23" class="highlighted">
+        <circle cx="12" cy="11" r="11" stroke="#666666" stroke-width="1" fill="rgba(0,0,0,0.4)"></circle>
+        <text x="7" y="16" fill="#f0eabb">{{loop.index}}</text>
+      </svg>
+  {% else %}
+      <svg height="23" width="23">
+        <circle cx="12" cy="11" r="11" stroke="#666666" stroke-width="1" fill="rgba(0,0,0,0.4)"></circle>
+        <text x="7" y="16" fill="#f0eabb">{{loop.index}}</text>
+      </svg>
+  {% endif %}
+{% endfor %}
 
 {% endblock %}
 

@@ -10,10 +10,13 @@ app = Flask(__name__)
 # Parametry to odpowiednio liczba komnat i poziomów
 kopalnia = Kopalnia(8, 3)
 
+# Gra w postaci parametrów przyjmuje imiona graczy
+gra = MagnumSal('Janek', 'Bartek', 'Tomek', 'Pisul')
+
 # Miejsca z których można korzystać raz na turę
-zamek = Zamek()
+zamek = Zamek(len(gra.gracze))
 plac = Plac()
-karczma = Karczma()
+karczma = Karczma(len(gra.gracze))
 warsztat = Warsztat()
 czerpalnia = Czerpalnia()
 
@@ -24,32 +27,31 @@ bialaKostkaSoli = SlotKostek(KostkiSoli(0, 0, 1), 7, 8)
 
 targ = Targowisko(brazowaKostkaSoli, zielonaKostkaSoli, bialaKostkaSoli)
 
-# Gra w postaci parametrów przyjmuje imiona graczy
-gra = MagnumSal('Janek', 'Bartek')
-MAX_ZREALIZOWANYCH_ZAMOWIEN = 7
-
 gra.dodajBudynkiZPomocnikami(zamek, warsztat, czerpalnia, targ)
 
 
 @app.route('/')
 def stronaStartowa():
     ag = gra.aktualnyGracz
+    zamowienia = lambda x: 3 if x==2 else x
+
     return render_template('glowna.html',
                            narzedzia=warsztat.narzedzia[:3],
                            resztaKart=[len(warsztat.narzedzia)-3,
                                        len(zamek.zamowieniaKrolewskie)-4],
-                           zamowienia=zamek.zamowieniaKrolewskie[:4],
+                           zamowienia=zamek.zamowieniaKrolewskie[:zamowienia(len(gra.gracze))],
                            targ=targ.splaszczListe(),
                            kolejki=[zamek.kolejka.pierwszyEtap,
                                     zamek.kolejka.drugiEtap],
                            pomocnicy=gra.renderujPomocnikow(),
                            kopalnia=kopalnia,
                            zrealizowaneZamowieniaVar=zamek.zrealizowaneZamowienia,
-                           maksZamowien=MAX_ZREALIZOWANYCH_ZAMOWIEN,
+                           maksZamowien=zamek.maksZrealizowanychZamowien,
                            playerTools=[x for x in ag.narzedzia if x.used is False] +
                            [x for x in ag.narzedzia if x.used is True],
                            ag=ag,
-                           kosztGornikowVar=karczma.info()
+                           kosztGornikowVar=karczma.info(),
+                           tydzien=gra.tydzien
                            )
 
 
@@ -166,22 +168,20 @@ def koniecTury():
 
     ag = gra.aktualnyGracz
 
-    if zamek.zrealizowaneZamowienia == MAX_ZREALIZOWANYCH_ZAMOWIEN and ag.lpGracza == 1:
-        grosze = 0
-        groszeZaNarzedzia = 0
-        groszeZaSol = 0
-        imie = ""
-        for gracz in gra.gracze:
-            groszeZaNarzedzia = len(gracz.narzedzia)
-            groszeZaSol = len(gracz.kostkiSoli)
-            print(gracz.kasa + groszeZaNarzedzia + groszeZaSol)
-            if (gracz.kasa + groszeZaNarzedzia + groszeZaSol) > grosze:
-                grosze = gracz.kasa + groszeZaNarzedzia + groszeZaSol
-                imie = gracz.imie
+    if zamek.zrealizowaneZamowienia >= zamek.maksZrealizowanychZamowien and ag.lpGracza == 1:
+        kopalnia.wrocGornikowDoZasobow()
+        gra.czyscPomocnikow()
+        targ.nowyTydzien()
+        karczma.nowyTydzien()
+        warsztat.nowyTydzien()
+        zamek.nowyTydzien()
+        gra.odswiezNarzedzia()
+        log = "Skończył się {0} tydzień".format(gra.tydzien)
+        gra.tydzien += 1
 
-        log = "Zwyciężył {0} mając {1} groszy w tym {2} za narzędzia".format(
-            imie, grosze, groszeZaNarzedzia)
-        return jsonify(alrt=1, log=log)
+        print("wyzwolone")
+
+        return jsonify(reload=True)
 
 
     for realizujacyZamowienie in [x for x in zamek.kolejka.drugiEtap if x is ag]:
@@ -218,6 +218,18 @@ def koniecTury():
         odpoczywa=odpoczywa
     )
 
+@app.route('/dev')
+def xxkkk():
+    kopalnia.wrocGornikowDoZasobow()
+    gra.czyscPomocnikow()
+    targ.nowyTydzien()
+    karczma.nowyTydzien()
+    warsztat.nowyTydzien()
+    zamek.nowyTydzien()
+    gra.odswiezNarzedzia()
+    gra.tydzien += 1
+    return stronaStartowa()
+
 
 @app.route('/pomocnik')
 def ustawPomocnika():
@@ -226,8 +238,8 @@ def ustawPomocnika():
 
 
     if ag.dostepnaAkcja():
-        bzp = gra.budynkiZPomocnikami[indeks]
         indeks = request.args.get('a', 0, type=int)
+        bzp = gra.budynkiZPomocnikami[indeks]
         if bzp.pomocnik is None and ag.gornicy > 0:
             ag.gornicy -= 1
             bzp.pomocnik = ag
@@ -276,6 +288,7 @@ def targowisko():
 
         target = targ.targetSlot(indeks)
         indeksDwa = targ.splaszczListe().index(target)
+        alrt = 0
 
         if "glejthandlowy" in narzedzia:
             for x in ag.narzedzia:
@@ -297,6 +310,9 @@ def targowisko():
                 targ.akcje += 1
                 log = " <u>{0}</u> kupił kostkę za {1} grosze".format(
                     ag.imie, target.cena-bonus)
+            else:
+                log = "Nie stać cię na tę kostkę"
+                alrt = 1
 
         else:
             if ag.kostkiSoli >= target.kostka:
@@ -307,6 +323,9 @@ def targowisko():
 
                 log = " <u>{0}</u> sprzedał kostkę za {1} grosze".format(
                     ag.imie, target.cena+bonus)
+            else:
+                log = "Nie masz takiej kostki soli"
+                alrt = 1
 
         # Zapobiega podwójnej gratyfikacji pomocnika
         if targ.pomocnik and targ.akcje == 1:
@@ -321,10 +340,10 @@ def targowisko():
             oknoGracza=ag.info(),
             zmiennaJSON=indeksDwa,
             log=log,
+            alrt=alrt
         )
 
     else:
-        alrt=0
         if targ in ag.uzyteBudynki:
             alrt = 3
         if ag.akcje == 2:
@@ -716,6 +735,7 @@ def modal():
         # Wydobycie wody za pomocą Czerpalni
         if indeks == 3:
 
+            ag.wykonajAkcje(czerpalnia)
             kostkiWody = [int(x) for x in json.loads(request.args.get('b', 0, type=str))]
             cenaWydobycia = -1
 

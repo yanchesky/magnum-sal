@@ -175,8 +175,9 @@ function dealToolCardsAnime(obj){
 }
 
 function dealRoyalOrdersAnime(obj){
-
-  var zamowieniaDoRozdania = obj.slice(-4)
+  // Trzeba podzielić na 2, ponieważ zczytuje "karta-zamowienia" z ukrytego modala
+  let zamowienia = (document.getElementsByClassName("karta-zamowienie").length - document.getElementsByClassName("order-zakryty").length)/2
+  var zamowieniaDoRozdania = obj.slice(-zamowienia)
   var zamowieniaDoObrotu = []
   for(var x of zamowieniaDoRozdania){
     let el = x
@@ -188,7 +189,7 @@ function dealRoyalOrdersAnime(obj){
   targets: zamowieniaDoRozdania,
   delay:function(target, index, totalTargets){return (totalTargets-index) * 100},
   top: 33,
-  left: function(target, index, totalTargets){return -25+(totalTargets-index)*104},
+  left: function(target, index, totalTargets){return -25+104*(4-zamowienia)+(totalTargets-index)*104},
 
   easing: 'easeOutExpo',
   duration: 800,

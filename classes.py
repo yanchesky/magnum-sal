@@ -362,6 +362,26 @@ class Kopalnia:
 
         return set(indeksy)
 
+    # Po zakończeniu tygodnia, zabiera górników z komnat szybów i kopalni
+    def wrocGornikowDoZasobow(self):
+        lista = self.splaszczKomnaty()
+        def rozlicz(gracze):
+            for gracz in gracze:
+                gracz.gornicy += 1
+
+        for komnata in lista:
+            if komnata.gracze:
+                rozlicz(komnata.gracze)
+                komnata.gracze = []
+            if komnata.zmeczeni:
+                rozlicz(komnata.zmeczeni)
+                komnata.gracze = []
+        for komnata in self.szyb:
+            if komnata.gracze:
+                rozlicz(komnata.gracze)
+                komnata.gracze = []
+
+
     def wstawGracza(self, gracz):
         self.target.gracze.append(gracz)
 
@@ -380,7 +400,7 @@ class Gracze:
         self.uzyteBudynki = []
         self.kostkiSoli = KostkiSoli(1, 0, 0)
         self.imie = imie
-        self.narzedzia = [Narzedzie("glejthandlowy","Glejt Handlowy"),Narzedzie("glejtkrolewski", "Glejt Królewski"),Narzedzie("czerpak", "Czerpak"),Narzedzie("wozek", "Wózek")]
+        self.narzedzia = []
         self.uzywaGlejtu = False
 
     # Wyczerpuje narzędzie do rozpoczęcia następnego tygodnia. jako parametr
@@ -405,7 +425,7 @@ class Gracze:
     # Zwraca True, jeśli gracz posiada wolne akcje i nie korzystał z budynku.
     # Opcjonalnie jako parametr przyjmuje budynek
     def dostepnaAkcja(self, budynek=None):
-        if self.akcje < 2 and budynek not in self.uzyteBudynki:
+        if self.akcje < 22 and budynek not in self.uzyteBudynki:
             return True
         else:
             return False
@@ -436,6 +456,7 @@ class MagnumSal:
         self.licznikGraczy = 0
         self.aktualnyGracz = self.gracze[0]
         self.uzyteBudynki = []
+        self.tydzien = 1
 
         self.budynkiZPomocnikami = []
 
@@ -482,3 +503,17 @@ class MagnumSal:
     def zabierzPomocnika(self, x):
         del self.budynkiZPomocnikami[x].pomocnik
         self.aktualnyGracz.gornicy += 1
+
+    # Zwalnia sloty pomocników
+    def czyscPomocnikow(self):
+        for budynek in self.budynkiZPomocnikami:
+            if budynek.pomocnik:
+                budynek.pomocnik.gornicy += 1
+                budynek.pomocnik = None
+
+    # Odświeża narzędzia graczy
+    def odswiezNarzedzia(self):
+        for gracz in self.gracze:
+            for narzedzie in gracz.narzedzia:
+                if narzedzie.used is True:
+                    narzedzie.used = False
