@@ -184,14 +184,22 @@ class Targowisko:
             x.jestKostka = True
 
 
+    # Ustawia brązową i zieloną kostkę soli.
+    def nowyTydzien(self):
+        kostka = self.splaszczListe()
+        kostka[-1].jestKostka = True
+        kostka[-2].jestKostka = True
+
+
 class Karczma:
     kosztGornikow = [5, 5, 5, 6, 6, 7, 8]
 
     def __init__(self, iloscGraczy=4):
         self.nazwa = "Karczma"
         self.copyKosztGornikow = Karczma.kosztGornikow[:]
-        self.kosztGornikow = Karczma.kosztGornikow[abs(iloscGraczy - 4)*2:]
-        self.aktualnaPozycja = abs(iloscGraczy - 4)*2
+        self.startowaPozycja = abs(iloscGraczy - 4)*2
+        self.kosztGornikow = Karczma.kosztGornikow[self.startowaPozycja:]
+        self.aktualnaPozycja = self.startowaPozycja
 
     def info(self):
         tmp = []
@@ -203,6 +211,12 @@ class Karczma:
 
         return tmp
 
+    def nowyTydzien(self):
+        self.aktualnaPozycja = self.startowaPozycja
+        self.kosztGornikow = Karczma.kosztGornikow[self.startowaPozycja:]
+        print(self.kosztGornikow)
+
+
 
 class Plac:
     def __init__(self):
@@ -213,15 +227,37 @@ class Warsztat:
     def __init__(self):
         self.nazwa = "Warsztat"
         self.pomocnik = None
-        self.narzedzia = [
+        self.narzedziaWszystkie = [
+            Narzedzie("kilof", "Kilof"),
+            Narzedzie("kilof", "Kilof"),
             Narzedzie("kilof", "Kilof"),
             Narzedzie("lina", "Lina"),
+            Narzedzie("lina", "Lina"),
+            Narzedzie("lina", "Lina"),
+            Narzedzie("czerpak", "Czerpak"),
+            Narzedzie("czerpak", "Czerpak"),
             Narzedzie("czerpak", "Czerpak"),
             Narzedzie("prowiant", "Prowiant"),
-            Narzedzie("wozek", "Wozek"),
+            Narzedzie("prowiant", "Prowiant"),
+            Narzedzie("prowiant", "Prowiant"),
+            Narzedzie("wozek", "Wózek"),
+            Narzedzie("wozek", "Wózek"),
+            Narzedzie("wozek", "Wózek"),
             Narzedzie("glejthandlowy", "Glejt Handlowy"),
+            Narzedzie("glejthandlowy", "Glejt Handlowy"),
+            Narzedzie("glejthandlowy", "Glejt Handlowy"),
+            Narzedzie("glejtkrolewski", "Glejt Królewski"),
+            Narzedzie("glejtkrolewski", "Glejt Królewski"),
             Narzedzie("glejtkrolewski", "Glejt Królewski")]
-        random.shuffle(self.narzedzia)
+        random.shuffle(self.narzedziaWszystkie)
+
+        self.narzedzia = [self.narzedziaWszystkie.pop() for x in range(7)]
+
+    def nowyTydzien(self):
+        if self.narzedziaWszystkie:
+            self.narzedzia = [self.narzedziaWszystkie.pop() for x in range(7)]
+        else:
+            self.narzedzia = []
 
 
 class Czerpalnia:
@@ -235,12 +271,29 @@ class Zamek:
         self.nazwa = "Zamek"
         self.pomocnik = None
         self.zrealizowaneZamowienia = 0
-        self.maksZrealizowanychZamowien = 7
+        self.maksZrealizowanychZamowien = 5
         if iloscGraczy == 2:
             self.maksZrealizowanychZamowien = 4
+        self.iloscTygodni = 3
         self.kolejka = Kolejka()
         self.robiZamowienie = []
-        self.zamowieniaKrolewskie = [
+        self.zamowieniaKrolewskieWszystkie = [
+            ZamowienieKrolewskie(KostkiSoli(0, 1, 1)),
+            ZamowienieKrolewskie(KostkiSoli(1, 2, 0)),
+            ZamowienieKrolewskie(KostkiSoli(2, 0, 1)),
+            ZamowienieKrolewskie(KostkiSoli(0, 0, 2)),
+            ZamowienieKrolewskie(KostkiSoli(0, 2, 1)),
+            ZamowienieKrolewskie(KostkiSoli(1, 0, 2)),
+            ZamowienieKrolewskie(KostkiSoli(0, 1, 2)),
+            ZamowienieKrolewskie(KostkiSoli(0, 0, 3)),
+            ZamowienieKrolewskie(KostkiSoli(0, 2, 0)),
+            ZamowienieKrolewskie(KostkiSoli(1, 0, 1)),
+            ZamowienieKrolewskie(KostkiSoli(1, 0, 1)),
+            ZamowienieKrolewskie(KostkiSoli(0, 1, 1)),
+            ZamowienieKrolewskie(KostkiSoli(1, 2, 0)),
+            ZamowienieKrolewskie(KostkiSoli(2, 0, 1)),
+            ZamowienieKrolewskie(KostkiSoli(0, 3, 0)),
+            ZamowienieKrolewskie(KostkiSoli(1, 1, 1)),
             ZamowienieKrolewskie(KostkiSoli(2, 0, 0)),
             ZamowienieKrolewskie(KostkiSoli(2, 0, 0)),
             ZamowienieKrolewskie(KostkiSoli(1, 1, 0)),
@@ -249,11 +302,29 @@ class Zamek:
             ZamowienieKrolewskie(KostkiSoli(3, 0, 0)),
             ZamowienieKrolewskie(KostkiSoli(2, 1, 0)),
             ZamowienieKrolewskie(KostkiSoli(2, 1, 0)),
-            ZamowienieKrolewskie(KostkiSoli(1, 1, 1)),
-            ZamowienieKrolewskie(KostkiSoli(1, 0, 1)),
-            ZamowienieKrolewskie(KostkiSoli(0, 2, 1))
         ]
+
+        self.zamowieniaKrolewskie = [self.zamowieniaKrolewskieWszystkie.pop()
+                                    for _ in range(8)]
+
         random.shuffle(self.zamowieniaKrolewskie)
+
+    def nowyTydzien(self):
+        if self.zamowieniaKrolewskieWszystkie:
+            self.zamowieniaKrolewskie = [self.zamowieniaKrolewskieWszystkie.pop()
+                                        for _ in range(8)]
+            random.shuffle(self.zamowieniaKrolewskie)
+        else:
+            self.zamowieniaKrolewskie = []
+
+        self.zrealizowaneZamowienia = 0
+
+        for gracz in self.kolejka.pierwszyEtap:
+            gracz.gornicy += 1
+        for gracz in self.kolejka.drugiEtap:
+            gracz.gornicy += 1
+        self.kolejka = Kolejka()
+
 
     def posiadaWymaganeKostki(self, ag):
         if ag.kostkiSoli in [x.kostkiSoli for x in self.zamowieniaKrolewskie[:4]]:

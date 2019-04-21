@@ -29,13 +29,12 @@ function gameLog(x){
   }
   if(x.oknoGracza){
     const oknoInfoGracza = document.getElementById("cialo-info-gracza");
-    const narzedziaGracza = document.getElementById("narzedzia-gracza").firstElementChild;
-
     while(oknoInfoGracza.firstChild){
       oknoInfoGracza.removeChild(oknoInfoGracza.firstChild)
     }
 
     oknoInfoGracza.innerHTML = x.oknoGracza;
+    const narzedziaGracza = document.getElementById("narzedzia-gracza").firstElementChild;
     narzedziaGracza.addEventListener("mousemove", slideTools);
 
     const glejty = document.querySelectorAll('#narzedzia-gracza > div .glejtkrolewski, #narzedzia-gracza > div .glejthandlowy');
@@ -228,20 +227,21 @@ function executeModal(e){
         showWaterPumpPrice()
       }
 
-      globalObject.modal.zmeczZipka(listaKostekModal.obiekty.length,i)
-      globalObject.kopalnia.zmeczZipka(listaKostekModal.obiekty.length,i)
+
 
     }
 
     if(indeks===0){
       hideModal("kopalnia-modal");
-      let i=0;
+      let kilof=0;
 
       for(let narzedzie of globalObject.aktywneNarzedzia.wartosci){
         if(narzedzie==="kilof"){
-          i++
+          kilof++
         }
       }
+      globalObject.modal.zmeczZipka(listaKostekModal.obiekty.length,kilof)
+      globalObject.kopalnia.zmeczZipka(listaKostekModal.obiekty.length,kilof)
     }
 
     globalObject.resetActiveTools();
@@ -293,9 +293,9 @@ function slideTools(e){
   if(e.currentTarget.children.length > 4){
     const szerNarz = e.currentTarget.children.length*60;
     const szerOkn = 230;
-    let pozycjaMyszki = $(window).width()-e.clientX-35;
+    let pozycjaMyszki = $(window).width()-e.clientX-25;
     let procentOkna = -(pozycjaMyszki/szerOkn)+1
-    e.target.parentNode.style.right = (szerNarz-szerOkn)*procentOkna+"px"
+    e.target.parentNode.style.left = 45-(szerNarz-szerOkn)*procentOkna+"px"
   }
 }
 
@@ -636,11 +636,23 @@ function finishTurn(e){
   $.getJSON("/koniec-tury",{},function(data){
     hideModal("kopalnia-modal");
     const kolejka = document.getElementById("droga-do-zamku")
-    kolejka.innerHTML = data.que;
+    if(data.que){
+      kolejka.innerHTML = data.que;
+    }
+
+    if(data.reload){
+      scrollUp()
+      showModal("tlo-podsumowanie");
+      const summaryWindow = document.getElementById("okno-podsumowanie");
+      summaryWindow.innerHTML = data.info;
+      const nextWeekButton = document.getElementById("przycisk-nastepny-tydzien");
+    	nextWeekButton.addEventListener("click", function(){window.location.replace("");})
+    }
 
 		gameLog(data);
 
     if(data.realizujeZamowienie){
+      scrollUp()
       showModal("zamowienia-modal");
       const zamowienia = [...document.querySelectorAll("#wnetrze-modal-zamowienia .karta-zamowienie")];
       zamowienia.forEach(function(zamowienie){

@@ -10,23 +10,22 @@ app = Flask(__name__)
 # Parametry to odpowiednio liczba komnat i poziomów
 kopalnia = Kopalnia(8, 3)
 
+# Gra w postaci parametrów przyjmuje imiona graczy
+gra = MagnumSal('Janek', "Alicja")
+
 # Miejsca z których można korzystać raz na turę
-zamek = Zamek()
+zamek = Zamek(len(gra.gracze))
 plac = Plac()
-karczma = Karczma()
+karczma = Karczma(len(gra.gracze))
 warsztat = Warsztat()
 czerpalnia = Czerpalnia()
 
-# Sloty do targowiska. Drugi parametr to ceny kostek soli na targu
+# Sloty do targowiska. Drugis parametr to ceny kostek soli na targu
 brazowaKostkaSoli = SlotKostek(KostkiSoli(1, 0, 0), 3, 3, 4, 5)
 zielonaKostkaSoli = SlotKostek(KostkiSoli(0, 1, 0), 4, 5, 6)
 bialaKostkaSoli = SlotKostek(KostkiSoli(0, 0, 1), 7, 8)
 
 targ = Targowisko(brazowaKostkaSoli, zielonaKostkaSoli, bialaKostkaSoli)
-
-# Gra w postaci parametrów przyjmuje imiona graczy
-gra = MagnumSal('Janek', 'Bartek')
-MAX_ZREALIZOWANYCH_ZAMOWIEN = 7
 
 gra.dodajBudynkiZPomocnikami(zamek, warsztat, czerpalnia, targ)
 
@@ -34,22 +33,25 @@ gra.dodajBudynkiZPomocnikami(zamek, warsztat, czerpalnia, targ)
 @app.route('/')
 def stronaStartowa():
     ag = gra.aktualnyGracz
+    zamowienia = lambda x: 3 if x==2 else x
+
     return render_template('glowna.html',
                            narzedzia=warsztat.narzedzia[:3],
                            resztaKart=[len(warsztat.narzedzia)-3,
                                        len(zamek.zamowieniaKrolewskie)-4],
-                           zamowienia=zamek.zamowieniaKrolewskie[:4],
+                           zamowienia=zamek.zamowieniaKrolewskie[:zamowienia(len(gra.gracze))],
                            targ=targ.splaszczListe(),
                            kolejki=[zamek.kolejka.pierwszyEtap,
                                     zamek.kolejka.drugiEtap],
                            pomocnicy=gra.renderujPomocnikow(),
                            kopalnia=kopalnia,
                            zrealizowaneZamowieniaVar=zamek.zrealizowaneZamowienia,
-                           maksZamowien=MAX_ZREALIZOWANYCH_ZAMOWIEN,
+                           maksZamowien=zamek.maksZrealizowanychZamowien,
                            playerTools=[x for x in ag.narzedzia if x.used is False] +
                            [x for x in ag.narzedzia if x.used is True],
                            ag=ag,
-                           kosztGornikowVar=karczma.info()
+                           kosztGornikowVar=karczma.info(),
+                           tydzien=gra.tydzien
                            )
 
 
@@ -94,7 +96,7 @@ def kolejkaDoZamku():
     ag = gra.aktualnyGracz
     glejt = False
 
-    if ag.dostepnaAkcja(zamek):
+    if ag.dostepnaAkcja(zamek) and ag.gornicy > 0:
         # Pobranie zadeklarowanych narzędzi
         zadeklarowaneNarzedzia = [x for x in json.loads(request.args.get('a', 0, type=str))]
         # Sprawdzenie czy znajduje się Glejt oraz potwierdzenie w back-endzie
@@ -154,6 +156,8 @@ def koniecTury():
     log = "<u>{0}</u> zakończył turę".format(ag.imie)
 
     realizujeZamowienie = False
+    if ag.uzywaGlejtu:
+        ag.uzywaGlejtu = False
 
     odpoczywa = False
 
@@ -164,24 +168,31 @@ def koniecTury():
 
     gra.zakonczTure()
 
+    gra.tury += 1
     ag = gra.aktualnyGracz
+    alrt = 0
+    targ.akcje = 0
 
-    if zamek.zrealizowaneZamowienia == MAX_ZREALIZOWANYCH_ZAMOWIEN and ag.lpGracza == 1:
-        grosze = 0
-        groszeZaNarzedzia = 0
-        groszeZaSol = 0
-        imie = ""
-        for gracz in gra.gracze:
-            groszeZaNarzedzia = len(gracz.narzedzia)
-            groszeZaSol = len(gracz.kostkiSoli)
-            print(gracz.kasa + groszeZaNarzedzia + groszeZaSol)
-            if (gracz.kasa + groszeZaNarzedzia + groszeZaSol) > grosze:
-                grosze = gracz.kasa + groszeZaNarzedzia + groszeZaSol
-                imie = gracz.imie
+    if zamek.zrealizowaneZamowienia >= zamek.maksZrealizowanychZamowien and gra.gracze.index(ag) == 0:
+        kopalnia.wrocGornikowDoZasobow()
+        targ.nowyTydzien()
+        karczma.nowyTydzien()
+        warsztat.nowyTydzien()
+        zamek.nowyTydzien()
+        gra.nowyTydzien()
+        log = "Skończył się {0} tydzień".format(gra.tydzien)
 
-        log = "Zwyciężył {0} mając {1} groszy w tym {2} za narzędzia".format(
-            imie, grosze, groszeZaNarzedzia)
-        return jsonify(alrt=1, log=log)
+        if gra.tydzien > zamek.iloscTygodni:
+            koniecGry = True
+        else:
+            koniecGry = False
+
+        info = render_template("podsumowanie.html",
+                                gracze=gra.gracze,
+                                iloscTur=gra.tury/len(gra.gracze),
+                                koniecGry=koniecGry)
+
+        return jsonify(reload=True, info = info)
 
 
     for realizujacyZamowienie in [x for x in zamek.kolejka.drugiEtap if x is ag]:
@@ -189,13 +200,14 @@ def koniecTury():
         if(zamek.posiadaWymaganeKostki(ag)):
             zamek.robiZamowienie.append(ag)
             realizujeZamowienie = True
+            ag.zrealizowaneZamowienia += 1
             log += "<br/><u>{0}</u> realizuje zamówienie królewskie".format(ag.imie)
 
         else:
             ag.gornicy += 1
             ag.kasa -= 3
             log = "Nie masz wystarczająco soli na zrealizowanie zamówienia. Tracisz 3 grosze"
-            return jsonify(oknoGracza=ag.info(),alrt=1,log=log)
+            alrt = 1
 
     if ag in zamek.kolejka.pierwszyEtap:
         zamek.kolejka.przesunKolejke(ag)
@@ -214,6 +226,7 @@ def koniecTury():
         oknoGracza=ag.info(),
         que=x,
         log=log,
+        alrt=alrt,
         realizujeZamowienie=realizujeZamowienie,
         odpoczywa=odpoczywa
     )
@@ -226,8 +239,8 @@ def ustawPomocnika():
 
 
     if ag.dostepnaAkcja():
-        bzp = gra.budynkiZPomocnikami[indeks]
         indeks = request.args.get('a', 0, type=int)
+        bzp = gra.budynkiZPomocnikami[indeks]
         if bzp.pomocnik is None and ag.gornicy > 0:
             ag.gornicy -= 1
             bzp.pomocnik = ag
@@ -270,12 +283,13 @@ def targowisko():
     indeks = request.args.get('a', 0, type=int)
     ag = gra.aktualnyGracz
 
-    if ag.dostepnaAkcja(targ) and targ.akcje < 2:
+    if ag.dostepnaAkcja(targ) or targ.akcje < 2:
 
         narzedzia = [x for x in json.loads(request.args.get('b', 0, type=str))]
 
         target = targ.targetSlot(indeks)
         indeksDwa = targ.splaszczListe().index(target)
+        alrt = 0
 
         if "glejthandlowy" in narzedzia:
             for x in ag.narzedzia:
@@ -297,6 +311,9 @@ def targowisko():
                 targ.akcje += 1
                 log = " <u>{0}</u> kupił kostkę za {1} grosze".format(
                     ag.imie, target.cena-bonus)
+            else:
+                log = "Nie stać cię na tę kostkę"
+                alrt = 1
 
         else:
             if ag.kostkiSoli >= target.kostka:
@@ -307,24 +324,27 @@ def targowisko():
 
                 log = " <u>{0}</u> sprzedał kostkę za {1} grosze".format(
                     ag.imie, target.cena+bonus)
+            else:
+                log = "Nie masz takiej kostki soli"
+                alrt = 1
 
         # Zapobiega podwójnej gratyfikacji pomocnika
         if targ.pomocnik and targ.akcje == 1:
             log += " {0} dostał za to 1 grosz".format(targ.pomocnik.imie)
             targ.pomocnik.kasa += 1
 
-        if targ.akcje == 2:
-            ag.uzywaGlejtu = False
+        if targ.akcje == 1:
             ag.wykonajAkcje(targ)
+
 
         return jsonify(
             oknoGracza=ag.info(),
             zmiennaJSON=indeksDwa,
             log=log,
+            alrt=alrt
         )
 
     else:
-        alrt=0
         if targ in ag.uzyteBudynki:
             alrt = 3
         if ag.akcje == 2:
@@ -415,7 +435,7 @@ def zamowienia():
 
             if len(zamek.zamowieniaKrolewskie) > 3:
                 nowaKarta = render_template(
-                    'nowa_karta.html', zamowienie=zamek.zamowieniaKrolewskie[3])
+                    'nowa_karta.html', zamowienie=zamek.zamowieniaKrolewskie[2])
             else:
                 nowaKarta = None
 
@@ -716,6 +736,7 @@ def modal():
         # Wydobycie wody za pomocą Czerpalni
         if indeks == 3:
 
+            ag.wykonajAkcje(czerpalnia)
             kostkiWody = [int(x) for x in json.loads(request.args.get('b', 0, type=str))]
             cenaWydobycia = -1
 
