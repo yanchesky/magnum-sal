@@ -149,7 +149,7 @@ function dealToolCardsAnime(obj){
 		anime({
 			targets: narzedziaDoRozdania,
 			delay:function(target, index, totalTargets){return (totalTargets-index) * 200},
-			left: function(target, index, totalTargets){return -104 - index*104},
+			left: function(target, index, totalTargets){return -300 + (totalTargets-index-1)*104},
 			easing: 'easeOutExpo',
 			duration: 800,
 			loop: false,
@@ -294,4 +294,10 @@ function moveUp(dane){
     loop: false,
     autoplay: true,
   })
+}
+
+function scrollUp(){
+  $('html, body').animate({
+          scrollTop: 0,
+      }, 500);
 }

@@ -184,11 +184,11 @@ class Targowisko:
             x.jestKostka = True
 
 
-    # Dodaje brązową kostkę soli, jeśli wszystkie sloty są wolne
+    # Ustawia brązową i zieloną kostkę soli.
     def nowyTydzien(self):
         kostka = self.splaszczListe()
         kostka[-1].jestKostka = True
-        kostka[-3].jestKostka = True
+        kostka[-2].jestKostka = True
 
 
 class Karczma:
@@ -197,8 +197,8 @@ class Karczma:
     def __init__(self, iloscGraczy=4):
         self.nazwa = "Karczma"
         self.copyKosztGornikow = Karczma.kosztGornikow[:]
-        self.kosztGornikow = Karczma.kosztGornikow[abs(iloscGraczy - 4)*2:]
         self.startowaPozycja = abs(iloscGraczy - 4)*2
+        self.kosztGornikow = Karczma.kosztGornikow[self.startowaPozycja:]
         self.aktualnaPozycja = self.startowaPozycja
 
     def info(self):
@@ -213,6 +213,9 @@ class Karczma:
 
     def nowyTydzien(self):
         self.aktualnaPozycja = self.startowaPozycja
+        self.kosztGornikow = Karczma.kosztGornikow[self.startowaPozycja:]
+        print(self.kosztGornikow)
+
 
 
 class Plac:
@@ -270,7 +273,7 @@ class Zamek:
         self.zrealizowaneZamowienia = 0
         self.maksZrealizowanychZamowien = 5
         if iloscGraczy == 2:
-            self.maksZrealizowanychZamowien = 3
+            self.maksZrealizowanychZamowien = 4
         self.iloscTygodni = 3
         self.kolejka = Kolejka()
         self.robiZamowienie = []
@@ -313,6 +316,15 @@ class Zamek:
             random.shuffle(self.zamowieniaKrolewskie)
         else:
             self.zamowieniaKrolewskie = []
+
+        self.zrealizowaneZamowienia = 0
+
+        for gracz in self.kolejka.pierwszyEtap:
+            gracz.gornicy += 1
+        for gracz in self.kolejka.drugiEtap:
+            gracz.gornicy += 1
+        self.kolejka = Kolejka()
+
 
     def posiadaWymaganeKostki(self, ag):
         if ag.kostkiSoli in [x.kostkiSoli for x in self.zamowieniaKrolewskie[:4]]:

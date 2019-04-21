@@ -20,6 +20,7 @@ class Komnata:
 
     wodaPierwszyPoziom = [1, 1, 1, 1, 1, 1, 2, 0]
     wodaDrugiPoziom = [2, 2, 2, 2, 2, 3]
+    wodaTrzeciPoziom = []
 
     random.shuffle(pierwszyPoziom)
     random.shuffle(wodaPierwszyPoziom)
@@ -43,6 +44,7 @@ class Komnata:
             self.woda = Komnata.wodaDrugiPoziom.pop(0)
         if poziom == 2:
             self.kostki = Komnata.trzeciPoziom.pop(0)
+            self.woda = 3
 
     def przydzielTlo(self, poziom):
         if poziom == 0:
@@ -226,6 +228,7 @@ class Kopalnia:
             else:
                 i += 1
 
+        print("Wózkowa lista",combined)
         return combined
 
     # Wybiera losowo omijane komnaty, priorytetyzując podwójne miejsca. Jako
@@ -237,12 +240,10 @@ class Kopalnia:
             poj = []
             for x in lista:
                 if len(x) > 1:
-                    podw.append(x[0])
-                    podw.append(x[1])
+                    podw.append(x.pop())
+                    podw.append(x.pop())
                 else:
-                    poj.append(x[0])
-
-                lista.remove(x)
+                    poj.append(x.pop())
 
             if len(podw) == 0:
                 temp.append(random.choice(poj))
@@ -251,7 +252,7 @@ class Kopalnia:
                     temp.append(podw[i])
 
             wozki -= 1
-
+        print("Wybrane komnaty",temp)
         return temp
 
     # Zwraca listę obiektów od początku kopalni do celu bez komnaty celu.
@@ -375,7 +376,7 @@ class Kopalnia:
                 komnata.gracze = []
             if komnata.zmeczeni:
                 rozlicz(komnata.zmeczeni)
-                komnata.gracze = []
+                komnata.zmeczeni = []
         for komnata in self.szyb:
             if komnata.gracze:
                 rozlicz(komnata.gracze)
@@ -395,13 +396,14 @@ class Gracze:
     def __init__(self, imie):
         self.gornicy = 4
         self.lpGracza = 1 + Gracze.iloscAktualnychGraczy
-        self.kasa = 10 + Gracze.iloscAktualnychGraczy * 2
-        self.akcje = 0
+        self.kasa = 0
+        self.akcje = 1
         self.uzyteBudynki = []
         self.kostkiSoli = KostkiSoli(1, 0, 0)
         self.imie = imie
         self.narzedzia = []
         self.uzywaGlejtu = False
+        self.zrealizowaneZamowienia = 0
 
     # Wyczerpuje narzędzie do rozpoczęcia następnego tygodnia. jako parametr
     # przyjmuje wybrane narzędzie. Zwraca True, jeśli wyczerpywanie przebiegło
@@ -425,7 +427,7 @@ class Gracze:
     # Zwraca True, jeśli gracz posiada wolne akcje i nie korzystał z budynku.
     # Opcjonalnie jako parametr przyjmuje budynek
     def dostepnaAkcja(self, budynek=None):
-        if self.akcje < 22 and budynek not in self.uzyteBudynki:
+        if self.akcje < 2 and budynek not in self.uzyteBudynki:
             return True
         else:
             return False
@@ -454,11 +456,16 @@ class MagnumSal:
             self.gracze.append(Gracze(imie))
             Gracze.iloscAktualnychGraczy += 1
         self.licznikGraczy = 0
-        self.aktualnyGracz = self.gracze[0]
         self.uzyteBudynki = []
         self.tydzien = 1
-
+        self.tury = 0
         self.budynkiZPomocnikami = []
+
+        random.shuffle(self.gracze)
+        self.aktualnyGracz = self.gracze[0]
+
+        for i,x in enumerate(self.gracze):
+            x.kasa += 10 + i*2
 
     # Dodaje do zmiennej budynki, które mają możliwość wstawienia górnika
     # jako pomocnika
@@ -471,7 +478,6 @@ class MagnumSal:
 
     # Kończy turę obecnego gracza, restuje akcje i czyści listę użytych budynków
     def zakonczTure(self):
-
         if self.licznikGraczy < len(self.gracze)-1:
             self.licznikGraczy += 1
             self.aktualnyGracz = self.gracze[self.licznikGraczy]
@@ -480,7 +486,11 @@ class MagnumSal:
             self.aktualnyGracz = self.gracze[0]
 
         self.aktualnyGracz.uzyteBudynki = []
-        self.aktualnyGracz.akcje = 0
+        if self.tury < len(self.gracze)-1:
+            self.aktualnyGracz.akcje = 1
+        else:
+            self.aktualnyGracz.akcje = 0
+
 
     # Zwraca listę z 4 elementami. 0 jeśli nikt nie zajmuje stanowiska pomocniczego
     # kolejne cyfry oznaczają graczy zajmujących stanowisko
@@ -504,16 +514,27 @@ class MagnumSal:
         del self.budynkiZPomocnikami[x].pomocnik
         self.aktualnyGracz.gornicy += 1
 
-    # Zwalnia sloty pomocników
-    def czyscPomocnikow(self):
-        for budynek in self.budynkiZPomocnikami:
-            if budynek.pomocnik:
-                budynek.pomocnik.gornicy += 1
-                budynek.pomocnik = None
+    def nowyTydzien(self):
+        def czyscPomocnikow():
+            for budynek in self.budynkiZPomocnikami:
+                if budynek.pomocnik:
+                    budynek.pomocnik.gornicy += 1
+                    budynek.pomocnik = None
 
-    # Odświeża narzędzia graczy
-    def odswiezNarzedzia(self):
-        for gracz in self.gracze:
-            for narzedzie in gracz.narzedzia:
-                if narzedzie.used is True:
-                    narzedzie.used = False
+        def odswiezNarzedzia():
+            for gracz in self.gracze:
+                for narzedzie in gracz.narzedzia:
+                    if narzedzie.used is True:
+                        narzedzie.used = False
+
+        def dodajAkcje():
+            for gracz in self.gracze:
+                gracz.akcje = 1
+
+        czyscPomocnikow()
+        odswiezNarzedzia()
+        dodajAkcje()
+        self.tydzien += 1
+        self.tury = 0
+        self.gracze.append(self.gracze.pop(0))
+        self.aktualnyGracz = self.gracze[0]

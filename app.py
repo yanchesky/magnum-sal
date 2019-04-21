@@ -11,7 +11,7 @@ app = Flask(__name__)
 kopalnia = Kopalnia(8, 3)
 
 # Gra w postaci parametrów przyjmuje imiona graczy
-gra = MagnumSal('Janek', 'Bartek', 'Tomek', 'Pisul')
+gra = MagnumSal('Janek', "Alicja")
 
 # Miejsca z których można korzystać raz na turę
 zamek = Zamek(len(gra.gracze))
@@ -20,7 +20,7 @@ karczma = Karczma(len(gra.gracze))
 warsztat = Warsztat()
 czerpalnia = Czerpalnia()
 
-# Sloty do targowiska. Drugi parametr to ceny kostek soli na targu
+# Sloty do targowiska. Drugis parametr to ceny kostek soli na targu
 brazowaKostkaSoli = SlotKostek(KostkiSoli(1, 0, 0), 3, 3, 4, 5)
 zielonaKostkaSoli = SlotKostek(KostkiSoli(0, 1, 0), 4, 5, 6)
 bialaKostkaSoli = SlotKostek(KostkiSoli(0, 0, 1), 7, 8)
@@ -96,7 +96,7 @@ def kolejkaDoZamku():
     ag = gra.aktualnyGracz
     glejt = False
 
-    if ag.dostepnaAkcja(zamek):
+    if ag.dostepnaAkcja(zamek) and ag.gornicy > 0:
         # Pobranie zadeklarowanych narzędzi
         zadeklarowaneNarzedzia = [x for x in json.loads(request.args.get('a', 0, type=str))]
         # Sprawdzenie czy znajduje się Glejt oraz potwierdzenie w back-endzie
@@ -156,6 +156,8 @@ def koniecTury():
     log = "<u>{0}</u> zakończył turę".format(ag.imie)
 
     realizujeZamowienie = False
+    if ag.uzywaGlejtu:
+        ag.uzywaGlejtu = False
 
     odpoczywa = False
 
@@ -166,22 +168,31 @@ def koniecTury():
 
     gra.zakonczTure()
 
+    gra.tury += 1
     ag = gra.aktualnyGracz
+    alrt = 0
+    targ.akcje = 0
 
-    if zamek.zrealizowaneZamowienia >= zamek.maksZrealizowanychZamowien and ag.lpGracza == 1:
+    if zamek.zrealizowaneZamowienia >= zamek.maksZrealizowanychZamowien and gra.gracze.index(ag) == 0:
         kopalnia.wrocGornikowDoZasobow()
-        gra.czyscPomocnikow()
         targ.nowyTydzien()
         karczma.nowyTydzien()
         warsztat.nowyTydzien()
         zamek.nowyTydzien()
-        gra.odswiezNarzedzia()
+        gra.nowyTydzien()
         log = "Skończył się {0} tydzień".format(gra.tydzien)
-        gra.tydzien += 1
 
-        print("wyzwolone")
+        if gra.tydzien > zamek.iloscTygodni:
+            koniecGry = True
+        else:
+            koniecGry = False
 
-        return jsonify(reload=True)
+        info = render_template("podsumowanie.html",
+                                gracze=gra.gracze,
+                                iloscTur=gra.tury/len(gra.gracze),
+                                koniecGry=koniecGry)
+
+        return jsonify(reload=True, info = info)
 
 
     for realizujacyZamowienie in [x for x in zamek.kolejka.drugiEtap if x is ag]:
@@ -189,13 +200,14 @@ def koniecTury():
         if(zamek.posiadaWymaganeKostki(ag)):
             zamek.robiZamowienie.append(ag)
             realizujeZamowienie = True
+            ag.zrealizowaneZamowienia += 1
             log += "<br/><u>{0}</u> realizuje zamówienie królewskie".format(ag.imie)
 
         else:
             ag.gornicy += 1
             ag.kasa -= 3
             log = "Nie masz wystarczająco soli na zrealizowanie zamówienia. Tracisz 3 grosze"
-            return jsonify(oknoGracza=ag.info(),alrt=1,log=log)
+            alrt = 1
 
     if ag in zamek.kolejka.pierwszyEtap:
         zamek.kolejka.przesunKolejke(ag)
@@ -214,21 +226,10 @@ def koniecTury():
         oknoGracza=ag.info(),
         que=x,
         log=log,
+        alrt=alrt,
         realizujeZamowienie=realizujeZamowienie,
         odpoczywa=odpoczywa
     )
-
-@app.route('/dev')
-def xxkkk():
-    kopalnia.wrocGornikowDoZasobow()
-    gra.czyscPomocnikow()
-    targ.nowyTydzien()
-    karczma.nowyTydzien()
-    warsztat.nowyTydzien()
-    zamek.nowyTydzien()
-    gra.odswiezNarzedzia()
-    gra.tydzien += 1
-    return stronaStartowa()
 
 
 @app.route('/pomocnik')
@@ -282,7 +283,7 @@ def targowisko():
     indeks = request.args.get('a', 0, type=int)
     ag = gra.aktualnyGracz
 
-    if ag.dostepnaAkcja(targ) and targ.akcje < 2:
+    if ag.dostepnaAkcja(targ) or targ.akcje < 2:
 
         narzedzia = [x for x in json.loads(request.args.get('b', 0, type=str))]
 
@@ -332,9 +333,9 @@ def targowisko():
             log += " {0} dostał za to 1 grosz".format(targ.pomocnik.imie)
             targ.pomocnik.kasa += 1
 
-        if targ.akcje == 2:
-            ag.uzywaGlejtu = False
+        if targ.akcje == 1:
             ag.wykonajAkcje(targ)
+
 
         return jsonify(
             oknoGracza=ag.info(),
@@ -434,7 +435,7 @@ def zamowienia():
 
             if len(zamek.zamowieniaKrolewskie) > 3:
                 nowaKarta = render_template(
-                    'nowa_karta.html', zamowienie=zamek.zamowieniaKrolewskie[3])
+                    'nowa_karta.html', zamowienie=zamek.zamowieniaKrolewskie[2])
             else:
                 nowaKarta = None
 

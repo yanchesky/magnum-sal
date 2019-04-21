@@ -1,0 +1,74 @@
+{% block podsumowanie %}
+
+<div id='grid-podsumowanie' class='gracze{{gracze|length}}'>
+<span><b>Imie</b></span>
+{% for gracz in gracze %}
+
+  <span><u>{{gracz.imie}}</u></span>
+
+{% endfor %}
+<span><b>Pieniądze</b></span>
+{% for gracz in gracze %}
+
+  <span>{{gracz.kasa}}</span>
+
+{% endfor %}
+<span><b>Narzędzia</b></span>
+{% for gracz in gracze %}
+
+  <span>{{gracz.narzedzia|length}}</span>
+
+{% endfor %}
+
+<span><b>Górnicy</b></span>
+{% for gracz in gracze %}
+
+  <span>{{gracz.gornicy}}</span>
+
+{% endfor %}
+
+<span><b>Kostki soli</b></span>
+{% for gracz in gracze %}
+  <span>
+    <span class='br'>{{gracz.kostkiSoli.kostki[0]}}</span>
+    <span class='zl'>{{gracz.kostkiSoli.kostki[1]}}</span>
+    <span class='bl'>{{gracz.kostkiSoli.kostki[2]}}</span>
+  </span>
+{% endfor %}
+
+<span><b>Zrealizowane zamówienia</b></span>
+{% for gracz in gracze %}
+
+  <span>{{gracz.zrealizowaneZamowienia}}</span>
+
+{% endfor %}
+
+{% if koniecGry%}
+
+<span><b>Podsumowanie</b></span>
+{% for gracz in gracze %}
+  {% set brazowa = gracz.kostkiSoli.kostki[0] %}
+  {% set zielona = gracz.kostkiSoli.kostki[1] %}
+  {% set biala = gracz.kostkiSoli.kostki[2] %}
+  {% if gracz.narzedzia|length > 8 %}
+    {% set kasaNarzedzia = 20 %}
+  {% elif gracz.narzedzia|length > 0 %}
+    {% set kasaNarzedzia = (gracz.narzedzia|length+1)//2*4-2 %}
+  {% else %}
+    {% set kasaNarzedzia = 0 %}
+  {% endif %}
+
+  <span>
+  {{kasaNarzedzia+gracz.kasa+(brazowa+zielona+biala)*3}}
+  </span>
+
+{% endfor %}
+</div>
+
+
+{% else %}
+  </div>
+  <div id="przycisk-nastepny-tydzien" class="centered"></div>
+{% endif %}
+
+{% endblock %}

@@ -39,10 +39,11 @@ var globalObject = {
   },
 
   resetActiveTools: function(){
-    for(var x of this.aktywneNarzedzia.obiekty){
+    for(let x of this.aktywneNarzedzia.obiekty){
       x.classList.remove("aktywne-modal");
       x.classList.add("uzyte-narzedzie");
     }
+    this.aktywneNarzedzia.wartosci = []
   },
 
 
@@ -120,11 +121,11 @@ var globalObject = {
       for(let x of e){
         this.gornicyHolder.appendChild(x)
       }
-      minerInAnime([...this.gornicyHolder.children].slice(0,e.length), 0);
+      minerInAnime([...this.gornicyHolder.children].slice(-e.length), 0);
     },
 
     usunZipka: function(e){
-      minerOutAnime(this.gornicyHolder.firstElementChild);
+      minerOutAnime(this.gornicyHolder.lastElementChild);
 
     },
 

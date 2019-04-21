@@ -12,15 +12,23 @@
 
 </head>
 	<body>
-
-		<div id="zawartosc-gry">
-			<div id="zamowienia-modal" class="modal">
-				<div id="cialo-modal-zamowienia" class="cialo-modal centered">
-					<div id="wnetrze-modal-zamowienia">
-						{% block zamowieniaModal %}{% endblock %}
-					</div>
+		<div id="zamowienia-modal" class="modal" style="display:none">
+			<div id="cialo-modal-zamowienia" class="cialo-modal centered">
+				<div id="wnetrze-modal-zamowienia">
+					{% block zamowieniaModal %}{% endblock %}
 				</div>
 			</div>
+		</div>
+
+		<div id="tlo-podsumowanie" style="display:none">
+			<div id="ramka-podsumowanie">
+				<div id="okno-podsumowanie">
+				</div>
+			</div>
+		</div>
+
+		<div id="zawartosc-gry">
+
 
 		<div id="gorny-pasek-info">
 				<div id="cialo-gorny-pasek">

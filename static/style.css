@@ -21,7 +21,7 @@ polygon {
   background-color: black;
 }
 
-.dodaj-robotnika, .zabierz-robotnika, .pomocnik, .gornik, #przycisk-konca-tury, .kostka-soli, .kostka-soli-targ, input[type="checkbox"] + label, .monetka-gracza, #koszt-wydobycia-wody{
+.dodaj-robotnika, .zabierz-robotnika, .pomocnik, .gornik, #przycisk-konca-tury, #przycisk-nastepny-tydzien, .kostka-soli, .kostka-soli-targ, input[type="checkbox"] + label, .monetka-gracza, #koszt-wydobycia-wody{
   background-image: url("sprites/komponenty.png");
 }
 
@@ -392,7 +392,7 @@ svg text{
 	height: 34px;
   width: 34px;
   margin-top:5px;
-  margin-left:-2px;
+  margin-left:-3px;
 }
 
 input[type="checkbox"] {
@@ -435,7 +435,7 @@ input[type="checkbox"]:checked + label{
     position: absolute;
     z-index: 1;
     width: 100%;
-    height: 100%;
+    height: 1212px;
     background-color: rgba(0,0,0,0.8);
 }
 
@@ -503,7 +503,7 @@ input[type="checkbox"]:checked + label{
 
 #cialo-modal-zamowienia{
   top:100px;
-  left:50%;
+  left:40%;
   width: 470px;
   height: 177px;
   background-image: url('img/popup_zamowienia_2.png');
@@ -785,13 +785,18 @@ input[type="checkbox"]:checked + label{
   background-position-x:-810px;
 }
 
-#przycisk-konca-tury{
+#przycisk-konca-tury, #przycisk-nastepny-tydzien{
   position:relative;
   width:164px;
   height:27px;
   background-position-x:-236px;
   text-align: center;
   cursor: pointer;
+}
+
+#przycisk-nastepny-tydzien{
+  margin-top:5px;
+  background-position-x:-1006px;
 }
 
 #gornicy-gracza {
@@ -823,19 +828,83 @@ input[type="checkbox"]:checked + label{
   right:15px;
 }
 
+#tlo-podsumowanie{
+  position:absolute;
+  z-index: 2;
+  width:397px;
+  height:269px;
+  left:25%;
+  top:100px;
+  background-color: rgba(0,0,0,0.8);
+}
+
+
 #ramka-dziennik-gry{
   position:absolute;
-  top:-3px;
-  left:-3px;
   width:276px;
   height:274px;
   background-image: url('img/ramka_log.png');
 }
 
-#okno-dziennik-gry{
+#ramka-podsumowanie{
+  position:absolute;
+  top:-3px;
+  left:-3px;
+  width:403px;
+  height:274px;
+  background-image: url('img/ramka_podsumowanie.png');
+}
+
+#okno-dziennik-gry, #okno-podsumowanie{
   margin:10px;
   overflow-y: hidden;
 }
+
+#grid-podsumowanie{
+  display: grid;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #f0eabb;
+  font-size: 14px;
+  text-align: left
+}
+
+#grid-podsumowanie > span{
+   padding: 5px 2px;
+   text-align: center;
+}
+
+#grid-podsumowanie .br{
+  font-weight: bold;
+  color: brown;
+}
+
+#grid-podsumowanie .zl{
+  font-weight: bold;
+  color: green;
+}
+
+#grid-podsumowanie .bl{
+  font-weight: bold;
+  color: white;
+}
+
+
+
+.gracze2{
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gracze3{
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gracze4{
+  grid-template-columns: repeat(5, 1fr);
+}
+
+
 
 .wpis {
 	position:relative;
@@ -886,7 +955,7 @@ input[type="checkbox"]:checked + label{
 }
 
 #zamknij-button{
-  position:relative;
+  position:absolute;
   float: right;
   right:-15px;
   top:-30px;
